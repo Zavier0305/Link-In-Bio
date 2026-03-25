@@ -17,6 +17,8 @@
             border: 1px solid #e1e4e8;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
         }
         .link-card:hover {
             background-color: #f6f8fa;
@@ -51,11 +53,10 @@
             background: white;
             object-fit: cover;
         }
-        /* プロジェクト画像/プレビューエリアのスタイル */
         .project-preview {
             width: 100%;
             height: 160px;
-            background: linear-gradient(135deg, #f0fff4 0%, #dcfce7 100%);
+            background: #f6f8fa;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -67,24 +68,24 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* 表示位置を60%に調整（さらに画像の下側を表示） */
-            object-position: center 60%; 
+            object-position: center center; 
             position: absolute;
             top: 0;
             left: 0;
             transition: transform 0.5s ease;
+            z-index: 2;
         }
         .link-card:hover .project-image {
             transform: scale(1.05);
         }
-        /* 画像がない時のロゴ */
         .project-placeholder-text {
             font-family: ui-monospace, monospace;
             font-weight: bold;
             color: #2ea44f;
-            opacity: 0.3;
+            opacity: 0.2;
             font-size: 0.8rem;
             letter-spacing: 0.1em;
+            z-index: 1;
         }
     </style>
 </head>
@@ -107,7 +108,8 @@
         <!-- Links Section -->
         <div class="space-y-3">
             <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] ml-1 mb-2">Platforms</h2>
-            <a href="https://github.com/Zavier0305" target="_blank" class="link-card flex items-center p-4 rounded-lg group">
+            
+            <a href="https://github.com/Zavier0305" target="_blank" class="link-card flex items-center p-4 group">
                 <div class="icon-container mr-4">
                     <i class="fab fa-github text-xl"></i>
                 </div>
@@ -117,7 +119,7 @@
                 <i class="fas fa-arrow-right text-gray-200 text-xs group-hover:text-green-600 ml-2"></i>
             </a>
 
-            <a href="https://x.com/KantZav_" target="_blank" class="link-card flex items-center p-4 rounded-lg group">
+            <a href="https://x.com/KantZav_" target="_blank" class="link-card flex items-center p-4 group">
                 <div class="icon-container mr-4">
                     <svg viewBox="0 0 24 24" class="w-5 h-5">
                         <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path>
@@ -129,7 +131,7 @@
                 <i class="fas fa-arrow-right text-gray-200 text-xs group-hover:text-green-600 ml-2"></i>
             </a>
 
-            <a href="https://zenn.dev/zavier" target="_blank" class="link-card flex items-center p-4 rounded-lg group">
+            <a href="https://zenn.dev/zavier" target="_blank" class="link-card flex items-center p-4 group">
                 <div class="icon-container mr-4">
                     <i class="fas fa-terminal text-lg"></i>
                 </div>
@@ -139,7 +141,7 @@
                 <i class="fas fa-arrow-right text-gray-200 text-xs group-hover:text-green-600 ml-2"></i>
             </a>
 
-            <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="link-card flex items-center p-4 rounded-lg group">
+            <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="link-card flex items-center p-4 group">
                 <div class="icon-container mr-4">
                     <i class="fab fa-youtube text-xl"></i>
                 </div>
@@ -155,10 +157,37 @@
             <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] ml-1">Selected Projects</h2>
             
             <div class="grid grid-cols-1 gap-4">
-                <!-- Reverse Pomodoro Timer -->
-                <a href="https://zavier0305.github.io/ReversePomodoroTimer/" target="_blank" class="link-card rounded-lg block group bg-white">
+                <!-- THE BUTTER -->
+                <a href="https://zavier0305.github.io/THE-BUTTER/" target="_blank" class="link-card block group bg-white">
                     <div class="project-preview">
-                        <img src="https://raw.githubusercontent.com/Zavier0305/ReversePomodoroTimer/main/Screenshot.png" 
+                        <!-- GitHubのリポジトリルートから直接画像を読み込む最も強力なURLに変更 -->
+                        <img src="https://github.com/Zavier0305/THE-BUTTER/blob/main/Screenshot.png?raw=true" 
+                             alt="THE BUTTER" 
+                             class="project-image"
+                             onerror="this.style.display='none'">
+                        <span class="project-placeholder-text">THE_BUTTER</span>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-sm accent-green">THE BUTTER</h3>
+                            <span class="text-[10px] font-mono text-gray-400">2026</span>
+                        </div>
+                        <p class="text-xs text-gray-500 leading-relaxed mb-4">
+                            究極のトーストを焼き上げる、バター塗りシミュレーター。0.1mmの塗り残しも許さない職人の世界へ。
+                        </p>
+                        <div class="flex gap-2">
+                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">HTML5</span>
+                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">Canvas API</span>
+                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">Physics</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Reverse Pomodoro Timer -->
+                <a href="https://zavier0305.github.io/ReversePomodoroTimer/" target="_blank" class="link-card block group bg-white">
+                    <div class="project-preview">
+                        <img src="https://github.com/Zavier0305/ReversePomodoroTimer/blob/main/Screenshot.png?raw=true" 
                              alt="Reverse Pomodoro Timer" 
                              class="project-image" 
                              onerror="this.style.display='none'">
@@ -171,7 +200,7 @@
                             <span class="text-[10px] font-mono text-gray-400">2026</span>
                         </div>
                         <p class="text-xs text-gray-500 leading-relaxed mb-4">
-                            25分休憩して、5分作業することによって集中して休憩できるという、しょうもない逆転の発想すぎるタイマー。
+                            25分休憩して、5分作業する。逆転の発想で「休憩の質」を極限まで高める、遊び心満載の生産性ツール。
                         </p>
                         <div class="flex gap-2">
                             <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">HTML</span>
