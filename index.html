@@ -3,247 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zavier | Links</title>
+    <title>Zavier | Links & Decks</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Swiper.js for Pokepoke-style Carousel -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
+        :root {
+            --brand-green: #2ea44f;
+            --brand-glow: rgba(46, 164, 79, 0.4);
+        }
+
         body {
-            background-color: #ffffff;
+            background-color: #fbfcfd;
             color: #1a1f23;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(46, 164, 79, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.02) 0%, transparent 30%);
         }
-        .link-card {
-            border: 1px solid #e1e4e8;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            background-color: #ffffff;
-            border-radius: 0.5rem;
+        
+        /* スキャンライン的な背景演出 */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.01) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0), rgba(0, 255, 0, 0), rgba(0, 0, 255, 0));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 100;
         }
-        .link-card:hover {
-            background-color: #f6f8fa;
-            border-color: #2ea44f;
-            transform: translateX(4px);
-        }
-        .icon-container {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #2ea44f;
-            fill: currentColor;
-        }
+
         .status-tag {
             background-color: #f0fff4;
             color: #22863a;
             border: 1px solid rgba(34, 134, 58, 0.2);
             font-size: 10px;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        .accent-green {
-            color: #2ea44f;
-        }
+
         .profile-avatar {
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            border: 2px solid #2ea44f;
-            padding: 2px;
+            border: 3px solid var(--brand-green);
+            padding: 3px;
             background: white;
+            box-shadow: 0 0 15px var(--brand-glow);
             object-fit: cover;
         }
+
+        /* --- Swiper Container --- */
+        .swiper {
+            width: 100%;
+            padding-top: 50px;
+            padding-bottom: 80px;
+            overflow: visible !important; 
+        }
+
+        .swiper-slide {
+            width: 300px; 
+            height: 440px;
+            perspective: 1200px;
+            opacity: 0.4;
+            filter: brightness(0.6) blur(1px);
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .swiper-slide-active {
+            opacity: 1 !important;
+            filter: brightness(1) blur(0) !important;
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        /* --- Link Card Design --- */
+        .link-card {
+            height: 100%;
+            background: #ffffff;
+            border-radius: 1.5rem;
+            border: 1px solid #e1e4e8;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transition: border-color 0.4s ease;
+        }
+
+        .swiper-slide-active .link-card {
+            border-color: var(--brand-green);
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.12),
+                0 0 20px var(--brand-glow);
+        }
+
+        /* ホログラフィックな反射光演出 */
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.1) 50%, transparent 55%);
+            transform: rotate(30deg);
+            pointer-events: none;
+            transition: 0.6s;
+        }
+        .swiper-slide-active .link-card:hover::before {
+            left: 100%;
+        }
+
         .project-preview {
             width: 100%;
-            height: 160px;
+            height: 230px;
             background: #f6f8fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
             overflow: hidden;
             border-bottom: 1px solid #e1e4e8;
         }
+
         .project-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center center; 
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition: transform 0.5s ease;
-            z-index: 2;
+            transition: transform 0.8s ease;
         }
-        .link-card:hover .project-image {
-            transform: scale(1.05);
+        .swiper-slide-active:hover .project-image {
+            transform: scale(1.1);
         }
-        .project-placeholder-text {
-            font-family: ui-monospace, monospace;
-            font-weight: bold;
-            color: #2ea44f;
-            opacity: 0.2;
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
-            z-index: 1;
+
+        /* Badge Styling */
+        .tech-badge {
+            font-size: 9px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+        }
+
+        .swiper-pagination-bullet {
+            width: 6px;
+            height: 6px;
+            background: #d1d5da;
+            opacity: 1;
+            transition: all 0.3s ease;
+        }
+        .swiper-pagination-bullet-active {
+            background: var(--brand-green) !important;
+            width: 24px;
+            border-radius: 3px;
+        }
+
+        .platform-pill {
+            background: white;
+            border: 1px solid #e1e4e8;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .platform-pill:hover {
+            border-color: var(--brand-green);
+            color: var(--brand-green);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(46, 164, 79, 0.1);
+        }
+
+        /* OS UI Elements */
+        .system-time {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            color: #959da5;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center pt-16 pb-12 px-6">
+<body class="min-h-screen flex flex-col items-center pt-8 pb-12">
 
-    <div class="max-w-md w-full">
+    <!-- Top Bar -->
+    <div class="max-w-4xl w-full px-6 flex justify-between items-center mb-12">
+        <div class="system-time" id="clock">00:00:00</div>
+        <div class="flex gap-2">
+            <div class="w-2 h-2 rounded-full bg-red-400"></div>
+            <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+            <div class="w-2 h-2 rounded-full bg-green-400"></div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl w-full px-6">
         <!-- Profile Section -->
-        <div class="mb-12 flex items-center gap-6">
-            <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar">
-            <div class="text-left">
-                <h1 class="text-2xl font-bold mb-1 tracking-tight">Zavier</h1>
-                <p class="text-gray-500 text-sm mb-2">14y.o. Developer & Creator</p>
-                <div class="flex flex-wrap gap-2">
-                    <span class="status-tag px-2 py-0.5 rounded">SYS_LOC: GUNMA</span>
-                    <span class="status-tag px-2 py-0.5 rounded">CORE_ID: 14-ZAV</span>
+        <div class="mb-14 flex flex-col md:flex-row items-center gap-8 justify-center">
+            <div class="relative">
+                <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar">
+                <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-4 border-white rounded-full"></div>
+            </div>
+            <div class="text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start gap-3 mb-1">
+                    <h1 class="text-3xl font-black text-gray-900 tracking-tighter">Zavier</h1>
+                    <span class="status-tag px-2 py-0.5 rounded text-[9px] border">Verified Dev</span>
+                </div>
+                <p class="text-gray-500 text-sm font-medium mb-3">14y.o. Fullstack Explorer & Creative Coder</p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-2">
+                    <span class="text-[10px] text-gray-400 font-mono"><i class="fas fa-map-marker-alt mr-1"></i>GUNMA, JP</span>
+                    <span class="text-[10px] text-gray-400 font-mono"><i class="fas fa-code-branch mr-1"></i>PROD_ENV_V2</span>
                 </div>
             </div>
         </div>
 
-        <!-- Links Section -->
-        <div class="space-y-3">
-            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] ml-1 mb-2">Platforms</h2>
-            
-            <a href="https://github.com/Zavier0305" target="_blank" class="link-card flex items-center p-4 group">
-                <div class="icon-container mr-4">
-                    <i class="fab fa-github text-xl"></i>
-                </div>
-                <div class="flex-1">
-                    <span class="font-medium text-sm">GitHub</span>
-                </div>
-                <i class="fas fa-arrow-right text-gray-200 text-xs group-hover:text-green-600 ml-2"></i>
-            </a>
-
-            <a href="https://x.com/KantZav_" target="_blank" class="link-card flex items-center p-4 group">
-                <div class="icon-container mr-4">
-                    <svg viewBox="0 0 24 24" class="w-5 h-5">
-                        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path>
-                    </svg>
-                </div>
-                <div class="flex-1">
-                    <span class="font-medium text-sm">X (Twitter)</span>
-                </div>
-                <i class="fas fa-arrow-right text-gray-200 text-xs group-hover:text-green-600 ml-2"></i>
-            </a>
-
-            <a href="https://zenn.dev/zavier" target="_blank" class="link-card flex items-center p-4 group">
-                <div class="icon-container mr-4">
-                    <i class="fas fa-terminal text-lg"></i>
-                </div>
-                <div class="flex-1">
-                    <span class="font-medium text-sm">Zenn</span>
-                </div>
-                <i class="fas fa-arrow-right text-gray-200 text-xs group-hover:text-green-600 ml-2"></i>
-            </a>
-
-            <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="link-card flex items-center p-4 group">
-                <div class="icon-container mr-4">
-                    <i class="fab fa-youtube text-xl"></i>
-                </div>
-                <div class="flex-1">
-                    <span class="font-medium text-sm">YouTube</span>
-                </div>
-                <i class="fas fa-arrow-right text-gray-200 text-xs group-hover:text-green-600 ml-2"></i>
-            </a>
-        </div>
-
-        <!-- Projects Section -->
-        <div class="mt-12 space-y-4">
-            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] ml-1">Selected Projects</h2>
-            
-            <div class="grid grid-cols-1 gap-4">
-                <!-- THE BUTTER -->
-                <a href="https://zavier0305.github.io/THE-BUTTER/" target="_blank" class="link-card block group bg-white">
-                    <div class="project-preview">
-                        <img src="https://github.com/Zavier0305/THE-BUTTER/blob/main/Screenshot.png?raw=true" 
-                             alt="THE BUTTER" 
-                             class="project-image"
-                             onerror="this.style.display='none'">
-                        <span class="project-placeholder-text">THE_BUTTER</span>
-                    </div>
-                    
-                    <div class="p-5">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-sm accent-green">THE BUTTER</h3>
-                            <span class="text-[10px] font-mono text-gray-400">2026</span>
-                        </div>
-                        <p class="text-xs text-gray-500 leading-relaxed mb-4">
-                            究極のトーストを焼き上げる、バター塗りシミュレーター。0.1mmの塗り残しも許さない職人の世界へ。
-                        </p>
-                        <div class="flex gap-2">
-                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">HTML5</span>
-                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">Canvas API</span>
-                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">Physics</span>
-                        </div>
-                    </div>
+        <!-- Connection Hub -->
+        <div class="mb-20">
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="https://github.com/Zavier0305" target="_blank" class="platform-pill flex items-center gap-3 px-6 py-2.5 rounded-xl text-sm font-bold">
+                    <i class="fab fa-github text-lg"></i> GitHub
                 </a>
-
-                <!-- Reverse Pomodoro Timer -->
-                <a href="https://zavier0305.github.io/ReversePomodoroTimer/" target="_blank" class="link-card block group bg-white">
-                    <div class="project-preview">
-                        <img src="https://github.com/Zavier0305/ReversePomodoroTimer/blob/main/Screenshot.png?raw=true" 
-                             alt="Reverse Pomodoro Timer" 
-                             class="project-image" 
-                             onerror="this.style.display='none'">
-                        <span class="project-placeholder-text">REV_POMODORO</span>
-                    </div>
-                    
-                    <div class="p-5">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-sm accent-green">Reverse Pomodoro Timer</h3>
-                            <span class="text-[10px] font-mono text-gray-400">2026</span>
-                        </div>
-                        <p class="text-xs text-gray-500 leading-relaxed mb-4">
-                            25分休憩して、5分作業する。逆転の発想で「休憩の質」を極限まで高める、遊び心満載の生産性ツール。
-                        </p>
-                        <div class="flex gap-2">
-                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">HTML</span>
-                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">CSS</span>
-                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">JS</span>
-                        </div>
-                    </div>
+                <a href="https://x.com/KantZav" target="_blank" class="platform-pill flex items-center gap-3 px-6 py-2.5 rounded-xl text-sm font-bold">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path></svg>
+                    Twitter
                 </a>
-
-                <!-- GOKIBURYYYYY -->
-                <a href="https://zavier0305.github.io/GOKIBURYYYYY/" target="_blank" class="link-card block group bg-white">
-                    <div class="project-preview">
-                        <img src="https://github.com/Zavier0305/GOKIBURYYYYY/blob/main/Screenshot.png?raw=true" 
-                             alt="GOKIBURYYYYY" 
-                             class="project-image"
-                             onerror="this.style.display='none'">
-                        <span class="project-placeholder-text">GOKIBURYYYYY</span>
-                    </div>
-                    
-                    <div class="p-5">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-sm accent-green">GOKIBURYYYYY</h3>
-                            <span class="text-[10px] font-mono text-gray-400">2026</span>
-                        </div>
-                        <p class="text-xs text-gray-500 leading-relaxed mb-4">
-                            画面を埋め尽くすほどの恐怖。カサカサと動き回る「彼ら」を退治する、究極のサバイバル・クリッカー。
-                        </p>
-                        <div class="flex gap-2">
-                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">HTML5</span>
-                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">Game Loop</span>
-                            <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded">Clicker</span>
-                        </div>
-                    </div>
+                <a href="https://zenn.dev/zavier" target="_blank" class="platform-pill flex items-center gap-3 px-6 py-2.5 rounded-xl text-sm font-bold">
+                    <i class="fas fa-pen-nib text-lg"></i> Zenn
+                </a>
+                <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="platform-pill flex items-center gap-3 px-6 py-2.5 rounded-xl text-sm font-bold">
+                    <i class="fab fa-youtube text-lg text-red-600"></i> Studio
                 </a>
             </div>
         </div>
 
-        <!-- Minimal Footer -->
-        <footer class="mt-20 border-t border-gray-100 pt-6 text-center">
-            <p class="text-[10px] text-gray-400 font-mono tracking-widest uppercase">
-                &copy; 2026 Zavier // build.stable.0305
+        <!-- Project Deck -->
+        <div class="relative w-screen left-[50%] right-[50%] -ml-[50vw] mr-[50vw]">
+            <div class="text-center mb-4">
+                <span class="text-[10px] font-black text-gray-300 uppercase tracking-[0.4em]">Project Archive</span>
+            </div>
+            
+            <div class="swiper projectSwiper">
+                <div class="swiper-wrapper">
+                    <!-- Cards (Doubled for perfect loop) -->
+                    <!-- Repeat this block 2-3 times -->
+                    <script>
+                        const projects = [
+                            {
+                                title: "SmartFlow",
+                                desc: "直感的な操作で思考を可視化するフローチャートエンジン。SVGの極致。",
+                                tech: "SVG / JS",
+                                color: "blue",
+                                url: "https://zavier0305.github.io/SmartFlow/",
+                                img: "https://github.com/Zavier0305/SmartFlow/blob/main/Screenshot.png?raw=true"
+                            },
+                            {
+                                title: "THE BUTTER",
+                                desc: "塗り残しゼロを目指す。バター本来の質感にこだわったシミュレーター。",
+                                tech: "Canvas / Physics",
+                                color: "yellow",
+                                url: "https://zavier0305.github.io/THE-BUTTER/",
+                                img: "https://github.com/Zavier0305/THE-BUTTER/blob/main/Screenshot.png?raw=true"
+                            },
+                            {
+                                title: "Reverse Pomodoro",
+                                desc: "25分の休憩と5分の作業。究極の休息を求めるあなたに贈るタイマー。",
+                                tech: "Vanilla JS",
+                                color: "orange",
+                                url: "https://zavier0305.github.io/ReversePomodoroTimer/",
+                                img: "https://github.com/Zavier0305/ReversePomodoroTimer/blob/main/Screenshot.png?raw=true"
+                            },
+                            {
+                                title: "GOKIBURYYYYY",
+                                desc: "視界を埋め尽くす黒い影。あなたのクリック精度が試されるサバイバル。",
+                                tech: "Game Engine",
+                                color: "red",
+                                url: "https://zavier0305.github.io/GOKIBURYYYYY/",
+                                img: "https://github.com/Zavier0305/GOKIBURYYYYY/blob/main/Screenshot.png?raw=true"
+                            }
+                        ];
+
+                        // Create slides dynamically for consistency and easy doubling
+                        const container = document.querySelector('.swiper-wrapper');
+                        [...projects, ...projects, ...projects].forEach(p => {
+                            const slide = document.createElement('div');
+                            slide.className = 'swiper-slide';
+                            slide.innerHTML = `
+                                <a href="${p.url}" target="_blank" class="link-card">
+                                    <div class="project-preview">
+                                        <img src="${p.img}" alt="${p.title}" class="project-image" onerror="this.src='https://via.placeholder.com/300x230?text=${p.title}'">
+                                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-2 py-1 rounded text-[8px] font-bold shadow-sm">
+                                            LIVE
+                                        </div>
+                                    </div>
+                                    <div class="p-7 flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <h3 class="font-black text-xl text-gray-800 mb-2">${p.title}</h3>
+                                            <p class="text-[11px] text-gray-500 leading-relaxed font-medium">
+                                                ${p.desc}
+                                            </p>
+                                        </div>
+                                        <div class="mt-4 flex items-center justify-between">
+                                            <span class="tech-badge bg-${p.color}-50 text-${p.color}-600 border-${p.color}-100">
+                                                ${p.tech}
+                                            </span>
+                                            <i class="fas fa-external-link-alt text-gray-300 text-xs"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                            container.appendChild(slide);
+                        });
+                    </script>
+                </div>
+                <!-- Controls -->
+                <div class="swiper-pagination mt-8"></div>
+            </div>
+        </div>
+
+        <!-- System Footer -->
+        <footer class="mt-20 border-t border-gray-100 pt-10 text-center">
+            <div class="flex justify-center items-center gap-6 mb-4">
+                <div class="flex flex-col items-center">
+                    <span class="text-[8px] text-gray-400 uppercase font-bold mb-1">Status</span>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-[10px] font-mono text-gray-600">Operational</span>
+                    </div>
+                </div>
+                <div class="w-px h-8 bg-gray-100"></div>
+                <div class="flex flex-col items-center">
+                    <span class="text-[8px] text-gray-400 uppercase font-bold mb-1">Release</span>
+                    <span class="text-[10px] font-mono text-gray-600">v2.5.0-STABLE</span>
+                </div>
+            </div>
+            <p class="text-[10px] text-gray-300 font-mono tracking-widest uppercase mb-8">
+                Design & Engineering by Zavier // Tokyo-Gunma Edge
             </p>
         </footer>
     </div>
 
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Clock
+            function updateClock() {
+                const now = new Date();
+                const time = now.toTimeString().split(' ')[0];
+                document.getElementById('clock').textContent = time;
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
+
+            // Initialize Swiper
+            const swiper = new Swiper(".projectSwiper", {
+                effect: "coverflow",
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: "auto",
+                speed: 700,
+                loop: true,
+                loopedSlides: 4,
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: true,
+                },
+                coverflowEffect: {
+                    rotate: 15,    // 傾きを少し強めて立体感を
+                    stretch: -10,  // カード間の重なりを調整
+                    depth: 150,    // 奥行き感
+                    modifier: 1.2,
+                    slideShadows: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                    dynamicBullets: true,
+                },
+                keyboard: {
+                    enabled: true,
+                },
+                on: {
+                    // スライドが変わるたびに背景色を微調整するような演出用
+                    slideChange: function () {
+                        const colors = ['rgba(46,164,79,0.05)', 'rgba(59,130,246,0.05)', 'rgba(245,158,11,0.05)', 'rgba(239,68,68,0.05)'];
+                        const index = this.realIndex % colors.length;
+                        document.body.style.backgroundColor = '#fbfcfd'; // ベース
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
