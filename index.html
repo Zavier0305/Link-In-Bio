@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0a0c12">
+    <meta name="theme-color" content="#0a0a0a">
     <title>Zavier | Links & Decks</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,23 +12,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg: #0a0c12;
+            --bg: #0a0a0a;
             --surface: rgba(255, 255, 255, 0.045);
-            --border: rgba(255, 255, 255, 0.09);
-            --text-primary: #f4f5f9;
-            --text-secondary: #9aa2b1;
-            --text-muted: #5f6675;
-            --accent-a: #8b5cf6;
-            --accent-b: #06b6d4;
+            --border: rgba(255, 255, 255, 0.12);
+            --text-primary: #f2f2f2;
+            --text-secondary: #a3a3a3;
+            --text-muted: #6b6b6b;
         }
 
         * { box-sizing: border-box; }
 
         body {
-            background:
-                radial-gradient(60vw 60vw at 10% -10%, rgba(139, 92, 246, 0.16), transparent 60%),
-                radial-gradient(50vw 50vw at 100% 10%, rgba(6, 182, 212, 0.12), transparent 60%),
-                var(--bg);
+            background: var(--bg);
             color: var(--text-primary);
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -39,7 +34,7 @@
             height: 88px;
             border-radius: 50%;
             padding: 3px;
-            background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+            background: linear-gradient(135deg, #fff, #4a4a4a);
         }
         .profile-avatar {
             width: 100%;
@@ -48,11 +43,7 @@
             border: 3px solid var(--bg);
             object-fit: cover;
             display: block;
-        }
-
-        .glass {
-            background: var(--surface);
-            border: 1px solid var(--border);
+            filter: grayscale(1) contrast(1.05);
         }
 
         .platform-pill {
@@ -63,44 +54,93 @@
         }
         .platform-pill:hover {
             border-color: transparent;
-            color: #fff;
-            background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+            color: #000;
+            background: #fff;
         }
 
         .gradient-text {
-            background: linear-gradient(90deg, #fff 10%, #c4b5fd 70%);
+            background: linear-gradient(90deg, #fff 10%, #999 80%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        /* --- Project cards --- */
+        /* --- Project cards: foil "pack pull" style --- */
+        .card-grid {
+            perspective: 1200px;
+        }
+
         .link-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 1.25rem;
+            position: relative;
             display: flex;
             flex-direction: column;
+            border-radius: 1.25rem;
             overflow: hidden;
-            transition: border-color 0.2s ease, transform 0.2s ease;
+            background: linear-gradient(165deg, #202020, #060606);
+            border: 1px solid var(--border);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.12s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+            opacity: 0;
+            animation: pull-reveal 0.7s cubic-bezier(0.2, 0.85, 0.3, 1) forwards;
+            animation-delay: calc(var(--i, 0) * 90ms);
+            will-change: transform;
         }
         .link-card:hover {
-            border-color: rgba(139, 92, 246, 0.4);
-            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
         }
+
+        @keyframes pull-reveal {
+            0%   { opacity: 0; transform: translateY(30px) rotateX(-12deg) scale(0.92); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
+        }
+
+        /* idle diagonal foil shimmer */
+        .link-card::before {
+            content: '';
+            position: absolute;
+            inset: -60%;
+            background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.10) 50%, transparent 60%);
+            animation: shimmer 6s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        @keyframes shimmer {
+            0%   { transform: translate(-20%, -15%); }
+            100% { transform: translate(20%, 15%); }
+        }
+
+        /* cursor-tracking holo sheen */
+        .link-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(480px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.28), transparent 45%);
+            mix-blend-mode: overlay;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .link-card:hover::after { opacity: 1; }
 
         .project-preview {
             width: 100%;
             aspect-ratio: 16 / 10;
-            background: #10131c;
+            background: #111;
             overflow: hidden;
             border-bottom: 1px solid var(--border);
+            position: relative;
         }
         .project-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            filter: grayscale(1) contrast(1.05);
         }
+
+        .card-body { position: relative; z-index: 2; }
 
         .tech-badge {
             font-size: 10px;
@@ -109,15 +149,10 @@
             border-radius: 999px;
             text-transform: uppercase;
             letter-spacing: 0.03em;
-            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
         }
-
-        .badge-blue    { background: rgba(59,130,246,0.14);  color: #7dabff; border-color: rgba(59,130,246,0.3); }
-        .badge-yellow  { background: rgba(234,179,8,0.14);   color: #ffd657; border-color: rgba(234,179,8,0.3); }
-        .badge-orange  { background: rgba(249,115,22,0.14);  color: #ff9f5a; border-color: rgba(249,115,22,0.3); }
-        .badge-red     { background: rgba(239,68,68,0.14);   color: #ff8080; border-color: rgba(239,68,68,0.3); }
-        .badge-indigo  { background: rgba(129,140,248,0.14); color: #a5b4fc; border-color: rgba(129,140,248,0.3); }
-        .badge-emerald { background: rgba(16,185,129,0.14);  color: #6ee7b7; border-color: rgba(16,185,129,0.3); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center pt-12 pb-16">
@@ -152,7 +187,7 @@
         <!-- Projects -->
         <div>
             <p class="text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.3em] mb-5">Projects</p>
-            <div id="projects-container" class="grid grid-cols-1 sm:grid-cols-2 gap-5"></div>
+            <div id="projects-container" class="card-grid grid grid-cols-1 sm:grid-cols-2 gap-5"></div>
         </div>
 
         <!-- Footer -->
@@ -167,7 +202,6 @@
                 title: "将棋アプリ",
                 desc: "本格的な将棋対局をWebで。Firebaseを活用したリアルタイム通信による対戦体験。",
                 tech: "React / Firebase",
-                color: "emerald",
                 url: "https://shogi-app-pearl.vercel.app/",
                 repo: "shogi-app"
             },
@@ -175,7 +209,6 @@
                 title: "HowToGetPassport",
                 desc: "パスポートの申請方法をわかりやすく解説。旅の第一歩をサポートするガイドサイト。",
                 tech: "Guide / Web",
-                color: "indigo",
                 url: "https://zavier0305.github.io/HowToGetPassport/",
                 repo: "HowToGetPassport"
             },
@@ -183,7 +216,6 @@
                 title: "SmartFlow",
                 desc: "直感的な操作で思考を可視化するフローチャートエンジン。SVGの極致。",
                 tech: "SVG / JS",
-                color: "blue",
                 url: "https://zavier0305.github.io/SmartFlow/",
                 repo: "SmartFlow"
             },
@@ -191,7 +223,6 @@
                 title: "THE BUTTER",
                 desc: "塗り残しゼロを目指す。バター本来の質感にこだわったシミュレーター。",
                 tech: "Canvas / Physics",
-                color: "yellow",
                 url: "https://zavier0305.github.io/THE-BUTTER/",
                 repo: "THE-BUTTER"
             },
@@ -199,7 +230,6 @@
                 title: "Reverse Pomodoro",
                 desc: "25分の休憩と5分の作業。究極の休息を求めるあなたに贈るタイマー。",
                 tech: "Vanilla JS",
-                color: "orange",
                 url: "https://zavier0305.github.io/ReversePomodoroTimer/",
                 repo: "ReversePomodoroTimer"
             },
@@ -207,7 +237,6 @@
                 title: "GOKIBURYYYYY",
                 desc: "視界を埋め尽くす黒い影。あなたのクリック精度が試されるサバイバル。",
                 tech: "Game Engine",
-                color: "red",
                 url: "https://zavier0305.github.io/GOKIBURYYYYY/",
                 repo: "GOKIBURYYYYY"
             },
@@ -215,7 +244,6 @@
                 title: "反射神経",
                 desc: "瞬間の判断力を鍛える反射神経テスト。自分の限界に挑戦しよう。",
                 tech: "Vanilla JS",
-                color: "blue",
                 url: "https://zavier0305.github.io/hanshasinkei/",
                 repo: "hanshasinkei"
             }
@@ -228,16 +256,17 @@
 
         const container = document.getElementById('projects-container');
 
-        projects.forEach(p => {
+        projects.forEach((p, i) => {
             const card = document.createElement('a');
             card.href = p.url;
             card.target = '_blank';
             card.className = 'link-card';
+            card.style.setProperty('--i', i);
             card.innerHTML = `
                 <div class="project-preview">
                     <img alt="${p.title}" class="project-image">
                 </div>
-                <div class="p-5 flex-1 flex flex-col justify-between">
+                <div class="card-body p-5 flex-1 flex flex-col justify-between">
                     <div>
                         <h3 class="font-black text-lg text-white mb-1.5">${p.title}</h3>
                         <p class="text-[11px] text-[var(--text-secondary)] leading-relaxed font-medium">
@@ -245,7 +274,7 @@
                         </p>
                     </div>
                     <div class="mt-4 flex items-center justify-between">
-                        <span class="tech-badge badge-${p.color}">${p.tech}</span>
+                        <span class="tech-badge">${p.tech}</span>
                         <i class="fas fa-arrow-up-right-from-square text-[var(--text-muted)] text-xs"></i>
                     </div>
                 </div>
@@ -261,6 +290,21 @@
                     this.removeEventListener('error', handleError);
                     this.src = `https://via.placeholder.com/300x188?text=${encodeURIComponent(p.title)}`;
                 }
+            });
+
+            // ポケポケ風パック開封: マウス位置に応じた3Dチルト+ホロ光沢
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                const rotateX = (0.5 - y) * 14;
+                const rotateY = (x - 0.5) * 14;
+                card.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+                card.style.setProperty('--mx', `${x * 100}%`);
+                card.style.setProperty('--my', `${y * 100}%`);
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
             });
 
             container.appendChild(card);
