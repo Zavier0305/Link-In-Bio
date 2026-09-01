@@ -3,122 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#05070d">
+    <meta name="theme-color" content="#0a0c12">
     <title>Zavier | Links & Decks</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Swiper.js Carousel -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         :root {
-            --bg: #05070d;
+            --bg: #0a0c12;
             --surface: rgba(255, 255, 255, 0.045);
-            --surface-strong: rgba(255, 255, 255, 0.08);
             --border: rgba(255, 255, 255, 0.09);
-            --border-strong: rgba(255, 255, 255, 0.16);
             --text-primary: #f4f5f9;
             --text-secondary: #9aa2b1;
             --text-muted: #5f6675;
             --accent-a: #8b5cf6;
             --accent-b: #06b6d4;
-            --accent-glow: rgba(139, 92, 246, 0.35);
         }
 
         * { box-sizing: border-box; }
 
         body {
-            background: var(--bg);
+            background:
+                radial-gradient(60vw 60vw at 10% -10%, rgba(139, 92, 246, 0.16), transparent 60%),
+                radial-gradient(50vw 50vw at 100% 10%, rgba(6, 182, 212, 0.12), transparent 60%),
+                var(--bg);
             color: var(--text-primary);
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        .mono { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
-
-        /* --- Aurora background --- */
-        .aurora {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-        .aurora::before, .aurora::after, .aurora .blob {
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.35;
-        }
-        .aurora::before {
-            width: 42vw; height: 42vw;
-            top: -12%; left: -8%;
-            background: radial-gradient(circle, var(--accent-a), transparent 70%);
-            animation: float-a 22s ease-in-out infinite;
-        }
-        .aurora::after {
-            width: 38vw; height: 38vw;
-            bottom: -14%; right: -6%;
-            background: radial-gradient(circle, var(--accent-b), transparent 70%);
-            animation: float-b 26s ease-in-out infinite;
-        }
-        .aurora .blob {
-            width: 26vw; height: 26vw;
-            top: 30%; left: 55%;
-            background: radial-gradient(circle, #ec4899, transparent 70%);
-            opacity: 0.18;
-            animation: float-c 30s ease-in-out infinite;
-        }
-        @keyframes float-a {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(6vw, 8vh) scale(1.15); }
-        }
-        @keyframes float-b {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-5vw, -6vh) scale(1.1); }
-        }
-        @keyframes float-c {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-8vw, 5vh) scale(0.9); }
-        }
-
-        .noise {
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
-
-        .content { position: relative; z-index: 2; }
-
-        .status-tag {
-            background: linear-gradient(90deg, rgba(139,92,246,0.15), rgba(6,182,212,0.15));
-            color: #c4b5fd;
-            border: 1px solid rgba(139, 92, 246, 0.35);
-            font-size: 10px;
-            font-family: 'JetBrains Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
         }
 
         .profile-avatar-ring {
-            width: 96px;
-            height: 96px;
+            width: 88px;
+            height: 88px;
             border-radius: 50%;
             padding: 3px;
-            background: conic-gradient(from 180deg, var(--accent-a), var(--accent-b), #ec4899, var(--accent-a));
-            box-shadow: 0 0 40px var(--accent-glow);
-            animation: spin-ring 8s linear infinite;
-        }
-        @keyframes spin-ring {
-            to { transform: rotate(360deg); }
+            background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
         }
         .profile-avatar {
             width: 100%;
@@ -132,93 +53,57 @@
         .glass {
             background: var(--surface);
             border: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
         }
 
-        /* --- Swiper Container --- */
-        .swiper {
-            width: 100%;
-            padding-top: 40px;
-            padding-bottom: 70px;
-            overflow: visible !important;
-        }
-
-        .swiper-slide {
-            width: 300px;
-            height: 440px;
-            perspective: 1200px;
-            opacity: 0.35;
-            filter: brightness(0.55) blur(1px);
-            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .swiper-slide-active {
-            opacity: 1 !important;
-            filter: brightness(1) blur(0) !important;
-            transform: scale(1.05);
-            z-index: 10;
-        }
-
-        /* --- Link Card Design --- */
-        .link-card {
-            height: 100%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-            border-radius: 1.75rem;
+        .platform-pill {
+            background: var(--surface);
             border: 1px solid var(--border);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+            color: var(--text-secondary);
+            transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+        }
+        .platform-pill:hover {
+            border-color: transparent;
+            color: #fff;
+            background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #fff 10%, #c4b5fd 70%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* --- Project cards --- */
+        .link-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
-            transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+            transition: border-color 0.2s ease, transform 0.2s ease;
         }
-
-        .swiper-slide-active .link-card {
-            border-color: rgba(139, 92, 246, 0.55);
-            box-shadow:
-                0 25px 60px rgba(0,0,0,0.55),
-                0 0 40px var(--accent-glow);
-        }
-
-        /* holographic sheen */
-        .link-card::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.08) 50%, transparent 55%);
-            transform: rotate(30deg);
-            pointer-events: none;
-            transition: 0.6s;
-        }
-        .swiper-slide-active .link-card:hover::before {
-            left: 100%;
+        .link-card:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-3px);
         }
 
         .project-preview {
             width: 100%;
-            height: 230px;
-            background: #0b0f1a;
-            position: relative;
+            aspect-ratio: 16 / 10;
+            background: #10131c;
             overflow: hidden;
             border-bottom: 1px solid var(--border);
         }
-
         .project-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s ease;
-        }
-        .swiper-slide-active:hover .project-image {
-            transform: scale(1.1);
         }
 
-        /* Badge Styling */
         .tech-badge {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 700;
             padding: 3px 9px;
             border-radius: 999px;
@@ -233,146 +118,49 @@
         .badge-red     { background: rgba(239,68,68,0.14);   color: #ff8080; border-color: rgba(239,68,68,0.3); }
         .badge-indigo  { background: rgba(129,140,248,0.14); color: #a5b4fc; border-color: rgba(129,140,248,0.3); }
         .badge-emerald { background: rgba(16,185,129,0.14);  color: #6ee7b7; border-color: rgba(16,185,129,0.3); }
-
-        .swiper-pagination-bullet {
-            width: 6px;
-            height: 6px;
-            background: var(--border-strong);
-            opacity: 1;
-            transition: all 0.3s ease;
-        }
-        .swiper-pagination-bullet-active {
-            background: linear-gradient(90deg, var(--accent-a), var(--accent-b)) !important;
-            width: 26px;
-            border-radius: 3px;
-        }
-
-        .platform-pill {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            color: var(--text-secondary);
-            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .platform-pill:hover {
-            border-color: transparent;
-            color: #fff;
-            background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
-            transform: translateY(-4px) scale(1.04);
-            box-shadow: 0 14px 30px var(--accent-glow);
-        }
-
-        .gradient-text {
-            background: linear-gradient(90deg, #fff 10%, #c4b5fd 55%, #67e8f9 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .system-time {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center pt-8 pb-12">
-    <div class="aurora"><div class="blob"></div></div>
-    <div class="noise"></div>
-
-    <div class="content w-full flex flex-col items-center">
-        <!-- Top Bar -->
-        <div class="max-w-4xl w-full px-6 flex justify-between items-center mb-14">
-            <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="system-time" id="clock">00:00:00</span>
+<body class="min-h-screen flex flex-col items-center pt-12 pb-16">
+    <div class="w-full max-w-3xl px-6">
+        <!-- Profile -->
+        <div class="mb-12 flex flex-col items-center text-center">
+            <div class="profile-avatar-ring mb-5">
+                <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar">
             </div>
-            <span class="status-tag px-2.5 py-1 rounded-full text-[9px] border font-semibold">Indie Dev &middot; Gunma</span>
+            <h1 class="text-3xl font-black tracking-tight gradient-text mb-1">Zavier</h1>
+            <p class="text-[var(--text-secondary)] text-sm font-medium mb-3">Fullstack Explorer & Creative Coder</p>
+            <span class="text-[11px] text-[var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i>Gunma, JP</span>
         </div>
 
-        <div class="max-w-4xl w-full px-6">
-            <!-- Profile Section -->
-            <div class="mb-14 flex flex-col md:flex-row items-center gap-8 justify-center text-center md:text-left">
-                <div class="relative shrink-0">
-                    <div class="profile-avatar-ring">
-                        <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar">
-                    </div>
-                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-400 border-4 border-[#05070d] rounded-full"></div>
-                </div>
-                <div>
-                    <div class="flex items-center justify-center md:justify-start gap-3 mb-2">
-                        <h1 class="text-4xl font-black tracking-tight gradient-text">Zavier</h1>
-                        <span class="status-tag px-2 py-0.5 rounded-full text-[9px] border">Verified Dev</span>
-                    </div>
-                    <p class="text-[var(--text-secondary)] text-sm font-medium mb-3">14y.o. Fullstack Explorer & Creative Coder</p>
-                    <div class="flex flex-wrap justify-center md:justify-start gap-3">
-                        <span class="text-[10px] text-[var(--text-muted)] mono"><i class="fas fa-map-marker-alt mr-1"></i>GUNMA, JP</span>
-                        <span class="text-[10px] text-[var(--text-muted)] mono"><i class="fas fa-code-branch mr-1"></i>PROD_ENV_V2</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Connection Hub -->
-            <div class="mb-20">
-                <div class="flex flex-wrap justify-center gap-4">
-                    <a href="https://github.com/Zavier0305" target="_blank" class="platform-pill flex items-center gap-3 px-6 py-2.5 rounded-xl text-sm font-bold">
-                        <i class="fab fa-github text-lg"></i> GitHub
-                    </a>
-                    <a href="https://x.com/KantZav" target="_blank" class="platform-pill flex items-center gap-3 px-6 py-2.5 rounded-xl text-sm font-bold">
-                        <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path></svg>
-                        Twitter
-                    </a>
-                    <a href="https://zenn.dev/zavier" target="_blank" class="platform-pill flex items-center gap-3 px-6 py-2.5 rounded-xl text-sm font-bold">
-                        <i class="fas fa-pen-nib text-lg"></i> Zenn
-                    </a>
-                    <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="platform-pill flex items-center gap-3 px-6 py-2.5 rounded-xl text-sm font-bold">
-                        <i class="fab fa-youtube text-lg"></i> Studio
-                    </a>
-                </div>
-            </div>
-
-            <!-- Project Deck -->
-            <div class="relative w-screen left-[50%] right-[50%] -ml-[50vw] mr-[50vw]">
-                <div class="text-center mb-4">
-                    <span class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.4em]">Project Archive</span>
-                </div>
-
-                <div class="swiper projectSwiper">
-                    <div class="swiper-wrapper" id="projects-container">
-                        <!-- Cards will be injected by script -->
-                    </div>
-                    <!-- Controls -->
-                    <div class="swiper-pagination mt-8"></div>
-                </div>
-            </div>
-
-            <!-- System Footer -->
-            <footer class="mt-20 border-t border-[var(--border)] pt-10 text-center">
-                <div class="flex justify-center items-center gap-6 mb-4">
-                    <div class="flex flex-col items-center">
-                        <span class="text-[8px] text-[var(--text-muted)] uppercase font-bold mb-1">Status</span>
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-[10px] mono text-[var(--text-secondary)]">Operational</span>
-                        </div>
-                    </div>
-                    <div class="w-px h-8 bg-[var(--border)]"></div>
-                    <div class="flex flex-col items-center">
-                        <span class="text-[8px] text-[var(--text-muted)] uppercase font-bold mb-1">Release</span>
-                        <span class="text-[10px] mono text-[var(--text-secondary)]">v3.0.0-MODERN</span>
-                    </div>
-                </div>
-                <p class="text-[10px] text-[var(--text-muted)] mono tracking-widest uppercase mb-8">
-                    Design & Engineering by Zavier // Tokyo-Gunma Edge
-                </p>
-            </footer>
+        <!-- Social links -->
+        <div class="mb-14 flex flex-wrap justify-center gap-3">
+            <a href="https://github.com/Zavier0305" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://x.com/KantZav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path></svg>
+                Twitter
+            </a>
+            <a href="https://zenn.dev/zavier" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <i class="fas fa-pen-nib"></i> Zenn
+            </a>
+            <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <i class="fab fa-youtube"></i> Studio
+            </a>
         </div>
+
+        <!-- Projects -->
+        <div>
+            <p class="text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.3em] mb-5">Projects</p>
+            <div id="projects-container" class="grid grid-cols-1 sm:grid-cols-2 gap-5"></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-16 pt-8 border-t border-[var(--border)] text-center">
+            <p class="text-[11px] text-[var(--text-muted)]">Design & Engineering by Zavier</p>
+        </footer>
     </div>
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const projects = [
             {
@@ -381,8 +169,7 @@
                 tech: "React / Firebase",
                 color: "emerald",
                 url: "https://shogi-app-pearl.vercel.app/",
-                // ルート直下の icon.png を参照
-                img: "https://github.com/Zavier0305/shogi-app/blob/main/icon.png?raw=true"
+                repo: "shogi-app"
             },
             {
                 title: "HowToGetPassport",
@@ -390,7 +177,7 @@
                 tech: "Guide / Web",
                 color: "indigo",
                 url: "https://zavier0305.github.io/HowToGetPassport/",
-                img: "https://github.com/Zavier0305/HowToGetPassport/blob/main/icon.png?raw=true"
+                repo: "HowToGetPassport"
             },
             {
                 title: "SmartFlow",
@@ -398,7 +185,7 @@
                 tech: "SVG / JS",
                 color: "blue",
                 url: "https://zavier0305.github.io/SmartFlow/",
-                img: "https://github.com/Zavier0305/SmartFlow/blob/main/icon.png?raw=true"
+                repo: "SmartFlow"
             },
             {
                 title: "THE BUTTER",
@@ -406,7 +193,7 @@
                 tech: "Canvas / Physics",
                 color: "yellow",
                 url: "https://zavier0305.github.io/THE-BUTTER/",
-                img: "https://github.com/Zavier0305/THE-BUTTER/blob/main/icon.png?raw=true"
+                repo: "THE-BUTTER"
             },
             {
                 title: "Reverse Pomodoro",
@@ -414,7 +201,7 @@
                 tech: "Vanilla JS",
                 color: "orange",
                 url: "https://zavier0305.github.io/ReversePomodoroTimer/",
-                img: "https://github.com/Zavier0305/ReversePomodoroTimer/blob/main/icon.png?raw=true"
+                repo: "ReversePomodoroTimer"
             },
             {
                 title: "GOKIBURYYYYY",
@@ -422,7 +209,7 @@
                 tech: "Game Engine",
                 color: "red",
                 url: "https://zavier0305.github.io/GOKIBURYYYYY/",
-                img: "https://github.com/Zavier0305/GOKIBURYYYYY/blob/main/icon.png?raw=true"
+                repo: "GOKIBURYYYYY"
             },
             {
                 title: "反射神経",
@@ -430,83 +217,53 @@
                 tech: "Vanilla JS",
                 color: "blue",
                 url: "https://zavier0305.github.io/hanshasinkei/",
-                img: "https://github.com/Zavier0305/hanshasinkei/blob/main/icon.png?raw=true"
+                repo: "hanshasinkei"
             }
         ];
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Clock
-            function updateClock() {
-                const now = new Date();
-                const time = now.toTimeString().split(' ')[0];
-                const clockEl = document.getElementById('clock');
-                if (clockEl) clockEl.textContent = time;
-            }
-            setInterval(updateClock, 1000);
-            updateClock();
+        // 画像は screenshot.png -> icon.png -> プレースホルダーの順でフォールバック
+        function rawUrl(repo, file) {
+            return `https://github.com/Zavier0305/${repo}/blob/main/${file}?raw=true`;
+        }
 
-            // Render Projects
-            const container = document.getElementById('projects-container');
-            const displayProjects = [...projects, ...projects, ...projects];
+        const container = document.getElementById('projects-container');
 
-            displayProjects.forEach(p => {
-                const slide = document.createElement('div');
-                slide.className = 'swiper-slide';
-                slide.innerHTML = `
-                    <a href="${p.url}" target="_blank" class="link-card">
-                        <div class="project-preview">
-                            <img src="${p.img}" alt="${p.title}" class="project-image" onerror="this.src='https://via.placeholder.com/300x230?text=${encodeURIComponent(p.title)}'">
-                            <div class="absolute top-4 right-4 bg-black/50 backdrop-blur border border-white/10 px-2 py-1 rounded-full text-[8px] font-bold text-white/90 tracking-wide">
-                                LIVE
-                            </div>
-                        </div>
-                        <div class="p-7 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-black text-xl text-white mb-2">${p.title}</h3>
-                                <p class="text-[11px] text-[var(--text-secondary)] leading-relaxed font-medium">
-                                    ${p.desc}
-                                </p>
-                            </div>
-                            <div class="mt-4 flex items-center justify-between">
-                                <span class="tech-badge badge-${p.color}">
-                                    ${p.tech}
-                                </span>
-                                <i class="fas fa-arrow-up-right-from-square text-[var(--text-muted)] text-xs"></i>
-                            </div>
-                        </div>
-                    </a>
-                `;
-                container.appendChild(slide);
-            });
+        projects.forEach(p => {
+            const card = document.createElement('a');
+            card.href = p.url;
+            card.target = '_blank';
+            card.className = 'link-card';
+            card.innerHTML = `
+                <div class="project-preview">
+                    <img alt="${p.title}" class="project-image">
+                </div>
+                <div class="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-black text-lg text-white mb-1.5">${p.title}</h3>
+                        <p class="text-[11px] text-[var(--text-secondary)] leading-relaxed font-medium">
+                            ${p.desc}
+                        </p>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between">
+                        <span class="tech-badge badge-${p.color}">${p.tech}</span>
+                        <i class="fas fa-arrow-up-right-from-square text-[var(--text-muted)] text-xs"></i>
+                    </div>
+                </div>
+            `;
 
-            // Initialize Swiper
-            const swiper = new Swiper(".projectSwiper", {
-                effect: "coverflow",
-                grabCursor: true,
-                centeredSlides: true,
-                slidesPerView: "auto",
-                speed: 700,
-                loop: true,
-                autoplay: {
-                    delay: 4000,
-                    disableOnInteraction: true,
-                },
-                coverflowEffect: {
-                    rotate: 15,
-                    stretch: -10,
-                    depth: 150,
-                    modifier: 1.2,
-                    slideShadows: false,
-                },
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                    dynamicBullets: true,
-                },
-                keyboard: {
-                    enabled: true,
+            const img = card.querySelector('.project-image');
+            img.src = rawUrl(p.repo, 'screenshot.png');
+            img.addEventListener('error', function handleError() {
+                if (this.dataset.stage !== 'icon') {
+                    this.dataset.stage = 'icon';
+                    this.src = rawUrl(p.repo, 'icon.png');
+                } else {
+                    this.removeEventListener('error', handleError);
+                    this.src = `https://via.placeholder.com/300x188?text=${encodeURIComponent(p.title)}`;
                 }
             });
+
+            container.appendChild(card);
         });
     </script>
 </body>
