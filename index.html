@@ -32,6 +32,12 @@
         html { scroll-behavior: smooth; }
         * { box-sizing: border-box; }
 
+        /* キーボード操作時にテーマに合ったフォーカスリングを表示する(デフォルトのアウトラインのままだと浮いて見えるため) */
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--maroon);
+            outline-offset: 2px;
+        }
+
         button {
             background: none;
             border: none;
@@ -401,17 +407,17 @@
         <section id="link" class="page-section">
             <div class="section-divider"><span class="section-label">Link</span></div>
             <div class="flex flex-wrap justify-center gap-3">
-                <a href="https://github.com/Zavier0305" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <a href="https://github.com/Zavier0305" target="_blank" rel="noopener noreferrer" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
                     <i class="fab fa-github"></i> GitHub
                 </a>
-                <a href="https://x.com/KantZav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <a href="https://x.com/KantZav" target="_blank" rel="noopener noreferrer" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
                     <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path></svg>
                     Twitter
                 </a>
-                <a href="https://zenn.dev/zavier" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <a href="https://zenn.dev/zavier" target="_blank" rel="noopener noreferrer" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
                     <i class="fas fa-pen-nib"></i> Zenn
                 </a>
-                <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" rel="noopener noreferrer" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
                     <i class="fab fa-youtube"></i> Studio
                 </a>
             </div>
@@ -544,6 +550,7 @@
             const slot = document.createElement('a');
             slot.href = item.url;
             slot.target = '_blank';
+            slot.rel = 'noopener noreferrer';
             slot.className = 'card-slot';
             slot.style.setProperty('--i', i);
 
