@@ -22,11 +22,48 @@
 
         * { box-sizing: border-box; }
 
+        button {
+            background: none;
+            border: none;
+            font: inherit;
+            color: inherit;
+            cursor: pointer;
+        }
+
         body {
             background: var(--bg);
             color: var(--text-primary);
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- top navigation --- */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            background: rgba(10, 10, 10, 0.75);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-btn {
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.04em;
+            padding: 14px 4px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+        .nav-btn:hover { color: var(--text-secondary); }
+        .nav-btn.active { color: #fff; border-bottom-color: #fff; }
+
+        .tab-section { display: none; }
+        .tab-section.active { display: block; animation: tab-in 0.35s ease; }
+        @keyframes tab-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .profile-avatar-ring {
@@ -46,13 +83,13 @@
             filter: grayscale(1) contrast(1.05);
         }
 
-        .platform-pill {
+        .platform-pill, .ghost-btn {
             background: var(--surface);
             border: 1px solid var(--border);
             color: var(--text-secondary);
             transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
         }
-        .platform-pill:hover {
+        .platform-pill:hover, .ghost-btn:hover {
             border-color: transparent;
             color: #000;
             background: #fff;
@@ -65,39 +102,116 @@
             color: transparent;
         }
 
-        /* --- Project cards: foil "pack pull" style --- */
-        .card-grid {
+        .skill-tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: var(--surface);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        /* --- sub tabs (Works: apps / articles) --- */
+        .subtab-btn {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+        .subtab-btn.active {
+            color: #000;
+            background: #fff;
+            border-color: #fff;
+        }
+        .subtab-panel { display: none; }
+        .subtab-panel.active { display: block; }
+
+        /* --- Project / article cards: pack-pull flip reveal --- */
+        .card-slot {
+            display: block;
+            position: relative;
+            aspect-ratio: 3 / 4;
             perspective: 1200px;
         }
 
         .link-card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
+            position: absolute;
+            inset: 0;
             border-radius: 1.25rem;
-            overflow: hidden;
-            background: linear-gradient(165deg, #202020, #060606);
-            border: 1px solid var(--border);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
             transform-style: preserve-3d;
-            transition: transform 0.12s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
-            opacity: 0;
-            animation: pull-reveal 0.7s cubic-bezier(0.2, 0.85, 0.3, 1) forwards;
-            animation-delay: calc(var(--i, 0) * 90ms);
-            will-change: transform;
+            transform: rotateY(180deg);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            transition: box-shadow 0.3s ease;
+            animation: flip-reveal 0.8s cubic-bezier(0.3, 0.2, 0.2, 1) forwards;
+            animation-delay: calc(var(--i, 0) * 180ms + 250ms);
         }
-        .link-card:hover {
-            border-color: rgba(255, 255, 255, 0.35);
+        .link-card.settled:hover {
             box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
         }
 
-        @keyframes pull-reveal {
-            0%   { opacity: 0; transform: translateY(30px) rotateX(-12deg) scale(0.92); }
-            100% { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
+        @keyframes flip-reveal {
+            0%   { transform: rotateY(180deg) scale(0.9); }
+            60%  { transform: rotateY(0deg) scale(1.04); }
+            100% { transform: rotateY(0deg) scale(1); }
         }
 
-        /* idle diagonal foil shimmer */
-        .link-card::before {
+        .card-face {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            overflow: hidden;
+            backface-visibility: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-back-face {
+            transform: rotateY(180deg);
+            background: linear-gradient(155deg, #1d1d1d, #050505);
+            align-items: center;
+            justify-content: center;
+        }
+        .card-back-face::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 11px);
+        }
+        .card-back-face::after {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 1rem;
+            pointer-events: none;
+        }
+        .card-back-emblem {
+            position: relative;
+            z-index: 1;
+            width: 25%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: #eee;
+            box-shadow: 0 0 24px rgba(255, 255, 255, 0.12);
+        }
+
+        .card-front-face {
+            background: linear-gradient(165deg, #202020, #060606);
+        }
+
+        .link-card.settled .card-front-face::before {
             content: '';
             position: absolute;
             inset: -60%;
@@ -111,23 +225,40 @@
             100% { transform: translate(20%, 15%); }
         }
 
-        /* cursor-tracking holo sheen */
-        .link-card::after {
+        .card-front-face::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(480px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.28), transparent 45%);
+            background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.28), transparent 45%);
             mix-blend-mode: overlay;
             opacity: 0;
             transition: opacity 0.25s ease;
             pointer-events: none;
             z-index: 2;
         }
-        .link-card:hover::after { opacity: 1; }
+        .link-card.settled:hover .card-front-face::after { opacity: 1; }
+
+        .card-flash {
+            position: absolute;
+            inset: -12%;
+            border-radius: 1.25rem;
+            background: radial-gradient(circle, rgba(255,255,255,0.95), rgba(255,255,255,0) 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+            animation: flash-burst 0.9s ease-out forwards;
+            animation-delay: calc(var(--i, 0) * 180ms + 250ms);
+        }
+        @keyframes flash-burst {
+            0%, 38% { opacity: 0; }
+            52%     { opacity: 0.85; }
+            72%, 100% { opacity: 0; }
+        }
 
         .project-preview {
             width: 100%;
-            aspect-ratio: 16 / 10;
+            height: 55%;
+            flex-shrink: 0;
             background: #111;
             overflow: hidden;
             border-bottom: 1px solid var(--border);
@@ -140,7 +271,22 @@
             filter: grayscale(1) contrast(1.05);
         }
 
-        .card-body { position: relative; z-index: 2; }
+        .card-body {
+            position: relative;
+            z-index: 3;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 0;
+        }
+
+        .card-desc {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 
         .tech-badge {
             font-size: 10px;
@@ -155,40 +301,110 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center pt-12 pb-16">
-    <div class="w-full max-w-3xl px-6">
-        <!-- Profile -->
-        <div class="mb-12 flex flex-col items-center text-center">
-            <div class="profile-avatar-ring mb-5">
-                <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar">
+<body class="min-h-screen flex flex-col items-center pb-16">
+    <!-- Nav -->
+    <nav class="nav-bar w-full">
+        <div class="max-w-3xl mx-auto px-6 flex justify-center gap-8">
+            <button class="nav-btn" data-tab="home">HOME</button>
+            <button class="nav-btn" data-tab="about">ABOUT ME</button>
+            <button class="nav-btn" data-tab="works">WORKS</button>
+            <button class="nav-btn" data-tab="link">LINK</button>
+        </div>
+    </nav>
+
+    <div class="w-full max-w-3xl px-6 pt-12">
+
+        <!-- HOME -->
+        <section id="home" class="tab-section">
+            <div class="mb-10 flex flex-col items-center text-center">
+                <div class="profile-avatar-ring mb-5">
+                    <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar">
+                </div>
+                <h1 class="text-3xl font-black tracking-tight gradient-text mb-1">Zavier</h1>
+                <p class="text-[var(--text-secondary)] text-sm font-medium mb-3">中学生バイブコーダー / Fullstack Explorer</p>
+                <span class="text-[11px] text-[var(--text-muted)] mb-8"><i class="fas fa-map-marker-alt mr-1"></i>Gunma, JP</span>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button class="ghost-btn go-tab px-5 py-2 rounded-xl text-xs font-bold" data-tab="about">
+                        <i class="fas fa-user mr-1"></i> About Meを見る
+                    </button>
+                    <button class="ghost-btn go-tab px-5 py-2 rounded-xl text-xs font-bold" data-tab="works">
+                        <i class="fas fa-layer-group mr-1"></i> Worksを見る
+                    </button>
+                </div>
             </div>
-            <h1 class="text-3xl font-black tracking-tight gradient-text mb-1">Zavier</h1>
-            <p class="text-[var(--text-secondary)] text-sm font-medium mb-3">Fullstack Explorer & Creative Coder</p>
-            <span class="text-[11px] text-[var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i>Gunma, JP</span>
-        </div>
+        </section>
 
-        <!-- Social links -->
-        <div class="mb-14 flex flex-wrap justify-center gap-3">
-            <a href="https://github.com/Zavier0305" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
-                <i class="fab fa-github"></i> GitHub
-            </a>
-            <a href="https://x.com/KantZav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
-                <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path></svg>
-                Twitter
-            </a>
-            <a href="https://zenn.dev/zavier" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
-                <i class="fas fa-pen-nib"></i> Zenn
-            </a>
-            <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
-                <i class="fab fa-youtube"></i> Studio
-            </a>
-        </div>
+        <!-- ABOUT ME -->
+        <section id="about" class="tab-section">
+            <p class="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.3em] mb-5 text-center">About Me</p>
+            <div class="mb-10">
+                <p class="text-sm leading-loose text-[var(--text-secondary)]">
+                    中学2年生。独学でJavaScript / Pythonを学びながら、Gemini・Claudeなどの生成AIを"相棒"にアプリを作る
+                    「バイブコーディング」を実践中です。「技育祭2026春」への参加をきっかけに、
+                    <span class="text-white font-semibold">「完璧より完成」</span>を意識するようになり、作ったものをどんどん外に出すようになりました。
+                    学校行事のシステム開発から個人開発のゲーム・ツールまで、思いついたら手を動かすタイプです。
+                </p>
+            </div>
+            <div>
+                <p class="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mb-3">Skills</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Next.js</span>
+                    <span class="skill-tag">Firebase</span>
+                    <span class="skill-tag">Supabase</span>
+                    <span class="skill-tag">Google Apps Script</span>
+                    <span class="skill-tag">HTML / CSS</span>
+                    <span class="skill-tag">SVG / Canvas</span>
+                    <span class="skill-tag">Git / GitHub</span>
+                    <span class="skill-tag">Vercel</span>
+                </div>
+            </div>
+        </section>
 
-        <!-- Projects -->
-        <div>
-            <p class="text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.3em] mb-5">Projects</p>
-            <div id="projects-container" class="card-grid grid grid-cols-1 sm:grid-cols-2 gap-5"></div>
-        </div>
+        <!-- WORKS -->
+        <section id="works" class="tab-section">
+            <p class="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.3em] mb-5 text-center">Works</p>
+            <div class="flex justify-center gap-2 mb-6">
+                <button class="subtab-btn" data-sub="works-apps">アプリ</button>
+                <button class="subtab-btn" data-sub="works-articles">記事</button>
+            </div>
+
+            <div id="works-apps" class="subtab-panel">
+                <div id="apps-container" class="grid grid-cols-2 gap-4 sm:gap-5"></div>
+            </div>
+
+            <div id="works-articles" class="subtab-panel">
+                <div id="articles-container" class="grid grid-cols-2 gap-4 sm:gap-5"></div>
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <button id="replay-btn" class="ghost-btn flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold">
+                    <i class="fas fa-layer-group"></i> もう一度開封する
+                </button>
+            </div>
+        </section>
+
+        <!-- LINK -->
+        <section id="link" class="tab-section">
+            <p class="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.3em] mb-6 text-center">Link</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="https://github.com/Zavier0305" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://x.com/KantZav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                    <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path></svg>
+                    Twitter
+                </a>
+                <a href="https://zenn.dev/zavier" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                    <i class="fas fa-pen-nib"></i> Zenn
+                </a>
+                <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                    <i class="fab fa-youtube"></i> Studio
+                </a>
+            </div>
+        </section>
 
         <!-- Footer -->
         <footer class="mt-16 pt-8 border-t border-[var(--border)] text-center">
@@ -209,78 +425,136 @@
                 title: "HowToGetPassport",
                 desc: "パスポートの申請方法をわかりやすく解説。旅の第一歩をサポートするガイドサイト。",
                 tech: "Guide / Web",
-                url: "https://zavier0305.github.io/HowToGetPassport/",
+                url: "https://howtogetpassport.vercel.app/",
                 repo: "HowToGetPassport"
             },
             {
                 title: "SmartFlow",
                 desc: "直感的な操作で思考を可視化するフローチャートエンジン。SVGの極致。",
                 tech: "SVG / JS",
-                url: "https://zavier0305.github.io/SmartFlow/",
+                url: "https://smartflow-rose-six.vercel.app/",
                 repo: "SmartFlow"
             },
             {
                 title: "THE BUTTER",
                 desc: "塗り残しゼロを目指す。バター本来の質感にこだわったシミュレーター。",
                 tech: "Canvas / Physics",
-                url: "https://zavier0305.github.io/THE-BUTTER/",
+                url: "https://the-butter.vercel.app/",
                 repo: "THE-BUTTER"
             },
             {
                 title: "Reverse Pomodoro",
                 desc: "25分の休憩と5分の作業。究極の休息を求めるあなたに贈るタイマー。",
                 tech: "Vanilla JS",
-                url: "https://zavier0305.github.io/ReversePomodoroTimer/",
+                url: "https://reversepomodorotimer.vercel.app/",
                 repo: "ReversePomodoroTimer"
             },
             {
                 title: "GOKIBURYYYYY",
                 desc: "視界を埋め尽くす黒い影。あなたのクリック精度が試されるサバイバル。",
                 tech: "Game Engine",
-                url: "https://zavier0305.github.io/GOKIBURYYYYY/",
+                url: "https://gokiburyyyyy.vercel.app/",
                 repo: "GOKIBURYYYYY"
             },
             {
                 title: "反射神経",
                 desc: "瞬間の判断力を鍛える反射神経テスト。自分の限界に挑戦しよう。",
                 tech: "Vanilla JS",
-                url: "https://zavier0305.github.io/hanshasinkei/",
+                url: "https://hanshasinkei.vercel.app/",
                 repo: "hanshasinkei"
             }
         ];
 
-        // 画像は screenshot.png -> icon.png -> プレースホルダーの順でフォールバック
+        const articles = [
+            {
+                title: "文化祭で受付兼ランキングシステムを作ったら共倒れした件",
+                desc: "GASで冗長化したはずのシステムが、同一Googleアカウントの同時実行数制限で仲良く共倒れした話と、その緊急リカバリー。",
+                meta: "2026/07/05",
+                tags: ["GAS", "文化祭"],
+                url: "https://zenn.dev/zavier/articles/ee36a6bf62dac3",
+                img: "assets/festival-ranking-outage.png"
+            },
+            {
+                title: "初心者が行く技育祭2026春の感想",
+                desc: "「技育祭2026春」に参加して、「完璧より完成」の大切さを学んだ話。中学生バイブコーダーとしての第二の起点。",
+                meta: "2026/03/22",
+                tags: ["技育祭", "Vibe Coding"],
+                url: "https://zenn.dev/zavier/articles/9fb55c6caeda98",
+                img: "assets/gieku-output-reflection.png"
+            }
+        ];
+
         function rawUrl(repo, file) {
             return `https://github.com/Zavier0305/${repo}/blob/main/${file}?raw=true`;
         }
 
-        const container = document.getElementById('projects-container');
+        function buildCard(item, i, resolveImage) {
+            const slot = document.createElement('a');
+            slot.href = item.url;
+            slot.target = '_blank';
+            slot.className = 'card-slot';
+            slot.style.setProperty('--i', i);
 
-        projects.forEach((p, i) => {
-            const card = document.createElement('a');
-            card.href = p.url;
-            card.target = '_blank';
-            card.className = 'link-card';
-            card.style.setProperty('--i', i);
-            card.innerHTML = `
-                <div class="project-preview">
-                    <img alt="${p.title}" class="project-image">
-                </div>
-                <div class="card-body p-5 flex-1 flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-black text-lg text-white mb-1.5">${p.title}</h3>
-                        <p class="text-[11px] text-[var(--text-secondary)] leading-relaxed font-medium">
-                            ${p.desc}
-                        </p>
+            const badges = (item.tags || [item.tech]).map(t => `<span class="tech-badge">${t}</span>`).join(' ');
+
+            slot.innerHTML = `
+                <div class="link-card">
+                    <div class="card-face card-back-face">
+                        <div class="card-back-emblem">Z</div>
                     </div>
-                    <div class="mt-4 flex items-center justify-between">
-                        <span class="tech-badge">${p.tech}</span>
-                        <i class="fas fa-arrow-up-right-from-square text-[var(--text-muted)] text-xs"></i>
+                    <div class="card-face card-front-face">
+                        <div class="project-preview">
+                            <img alt="${item.title}" class="project-image">
+                        </div>
+                        <div class="card-body p-4">
+                            <div>
+                                <h3 class="font-black text-base text-white mb-1">${item.title}</h3>
+                                <p class="text-[9px] text-[var(--text-muted)] mb-1">${item.meta || ''}</p>
+                                <p class="card-desc text-[10px] text-[var(--text-secondary)] leading-relaxed font-medium">
+                                    ${item.desc}
+                                </p>
+                            </div>
+                            <div class="mt-2 flex items-center justify-between flex-wrap gap-1">
+                                <span class="flex gap-1 flex-wrap">${badges}</span>
+                                <i class="fas fa-arrow-up-right-from-square text-[var(--text-muted)] text-xs"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="card-flash"></div>
             `;
 
-            const img = card.querySelector('.project-image');
+            const img = slot.querySelector('.project-image');
+            resolveImage(img, item);
+
+            const card = slot.querySelector('.link-card');
+            card.addEventListener('animationend', function onEnd(e) {
+                if (e.animationName !== 'flip-reveal') return;
+                card.classList.add('settled');
+                card.style.transform = '';
+            });
+
+            slot.addEventListener('mousemove', (e) => {
+                if (!card.classList.contains('settled')) return;
+                const rect = slot.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                const rotateX = (0.5 - y) * 16;
+                const rotateY = (x - 0.5) * 16;
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04)`;
+                card.style.setProperty('--mx', `${x * 100}%`);
+                card.style.setProperty('--my', `${y * 100}%`);
+            });
+            slot.addEventListener('mouseleave', () => {
+                if (!card.classList.contains('settled')) return;
+                card.style.transform = 'rotateX(0) rotateY(0) scale(1)';
+            });
+
+            return slot;
+        }
+
+        // アプリカード: screenshot.png -> icon.png -> プレースホルダーの順でフォールバック
+        function resolveProjectImage(img, p) {
             img.src = rawUrl(p.repo, 'screenshot.png');
             img.addEventListener('error', function handleError() {
                 if (this.dataset.stage !== 'icon') {
@@ -291,24 +565,69 @@
                     this.src = `https://via.placeholder.com/300x188?text=${encodeURIComponent(p.title)}`;
                 }
             });
+        }
 
-            // ポケポケ風パック開封: マウス位置に応じた3Dチルト+ホロ光沢
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width;
-                const y = (e.clientY - rect.top) / rect.height;
-                const rotateX = (0.5 - y) * 14;
-                const rotateY = (x - 0.5) * 14;
-                card.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
-                card.style.setProperty('--mx', `${x * 100}%`);
-                card.style.setProperty('--my', `${y * 100}%`);
+        // 記事カード: リポジトリ内のローカル画像を直接参照
+        function resolveArticleImage(img, a) {
+            img.src = a.img;
+            img.addEventListener('error', function handleError() {
+                this.removeEventListener('error', handleError);
+                this.src = `https://via.placeholder.com/300x188?text=${encodeURIComponent(a.title)}`;
             });
-            card.addEventListener('mouseleave', () => {
+        }
+
+        const appsContainer = document.getElementById('apps-container');
+        projects.forEach((p, i) => appsContainer.appendChild(buildCard(p, i, resolveProjectImage)));
+
+        const articlesContainer = document.getElementById('articles-container');
+        articles.forEach((a, i) => articlesContainer.appendChild(buildCard(a, i, resolveArticleImage)));
+
+        function playReveal(container) {
+            container.querySelectorAll('.link-card').forEach((card) => {
+                card.classList.remove('settled');
                 card.style.transform = '';
+                card.style.animation = 'none';
+                void card.offsetWidth;
+                card.style.animation = '';
             });
-
-            container.appendChild(card);
+            container.querySelectorAll('.card-flash').forEach((flash) => {
+                flash.style.animation = 'none';
+                void flash.offsetWidth;
+                flash.style.animation = '';
+            });
+        }
+        document.getElementById('replay-btn').addEventListener('click', () => {
+            const activeSub = document.querySelector('.subtab-panel.active');
+            playReveal(activeSub || appsContainer.parentElement);
         });
+
+        // --- top-level tab navigation ---
+        const TABS = ['home', 'about', 'works', 'link'];
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const tabSections = document.querySelectorAll('.tab-section');
+
+        function showTab(id) {
+            if (!TABS.includes(id)) id = 'home';
+            tabSections.forEach(s => s.classList.toggle('active', s.id === id));
+            navButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+            history.replaceState(null, '', '#' + id);
+        }
+        navButtons.forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+        document.querySelectorAll('.go-tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+        window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
+        showTab(location.hash.slice(1) || 'home');
+
+        // --- Works sub tabs ---
+        const SUBS = ['works-apps', 'works-articles'];
+        const subButtons = document.querySelectorAll('.subtab-btn');
+        const subPanels = document.querySelectorAll('.subtab-panel');
+        function showSub(id) {
+            if (!SUBS.includes(id)) id = 'works-apps';
+            subPanels.forEach(p => p.classList.toggle('active', p.id === id));
+            subButtons.forEach(b => b.classList.toggle('active', b.dataset.sub === id));
+        }
+        subButtons.forEach(b => b.addEventListener('click', () => showSub(b.dataset.sub)));
+        showSub('works-apps');
     </script>
 </body>
 </html>
