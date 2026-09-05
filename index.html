@@ -397,19 +397,19 @@
         <!-- WORKS -->
         <section id="works" class="page-section">
             <div class="section-divider"><h2 class="section-label">Works</h2></div>
-            <div class="flex justify-center gap-2 mb-6">
-                <button class="subtab-btn" data-sub="works-apps">アプリ</button>
-                <button class="subtab-btn" data-sub="works-articles">記事</button>
+            <div class="flex justify-center gap-2 mb-6" role="tablist" aria-label="Works表示切替">
+                <button class="subtab-btn" data-sub="works-apps" role="tab" id="tab-works-apps" aria-controls="works-apps">アプリ</button>
+                <button class="subtab-btn" data-sub="works-articles" role="tab" id="tab-works-articles" aria-controls="works-articles">記事</button>
             </div>
 
-            <div id="works-apps" class="subtab-panel">
+            <div id="works-apps" class="subtab-panel" role="tabpanel" aria-labelledby="tab-works-apps">
                 <div id="apps-container" class="grid grid-cols-2 gap-4 sm:gap-5"></div>
                 <div class="mt-5 flex justify-center">
                     <button id="apps-more-btn" class="ghost-btn px-5 py-2 rounded-xl text-xs font-bold"></button>
                 </div>
             </div>
 
-            <div id="works-articles" class="subtab-panel">
+            <div id="works-articles" class="subtab-panel" role="tabpanel" aria-labelledby="tab-works-articles">
                 <div id="articles-container" class="grid grid-cols-2 gap-4 sm:gap-5"></div>
             </div>
         </section>
@@ -693,10 +693,25 @@
         function showSub(id) {
             if (!SUBS.includes(id)) id = 'works-apps';
             subPanels.forEach(p => p.classList.toggle('active', p.id === id));
-            subButtons.forEach(b => b.classList.toggle('active', b.dataset.sub === id));
+            subButtons.forEach(b => {
+                const selected = b.dataset.sub === id;
+                b.classList.toggle('active', selected);
+                b.setAttribute('aria-selected', String(selected));
+                b.tabIndex = selected ? 0 : -1;
+            });
             onLayoutChanged();
         }
-        subButtons.forEach(b => b.addEventListener('click', () => showSub(b.dataset.sub)));
+        subButtons.forEach((b, i) => {
+            b.addEventListener('click', () => showSub(b.dataset.sub));
+            // WAI-ARIAのタブパターンに合わせて左右矢印キーでも切替できるようにする
+            b.addEventListener('keydown', (e) => {
+                if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+                e.preventDefault();
+                const next = subButtons[(i + (e.key === 'ArrowRight' ? 1 : subButtons.length - 1)) % subButtons.length];
+                showSub(next.dataset.sub);
+                next.focus();
+            });
+        });
         showSub('works-apps');
 
     </script>
