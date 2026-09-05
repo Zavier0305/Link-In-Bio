@@ -467,11 +467,64 @@
             }
         ];
 
+        // --- scroll-spy nav (vertical scroll page, sticky top bar) ---
+        // section高さがまちまち(HOMEやLINKのように短いブロックもある)なため、
+        // IntersectionObserverのrootMargin(%指定)では閾値が破綻するケースがあった。
+        // 代わりに「上からの絶対位置」を直接比較する方式にして、ビューポートの高さに依存しないようにする。
+        // カード追加やタブ切替でページの高さが変わるたびonLayoutChanged()を呼び直す必要があるため、
+        // カード生成より前に関数を定義しておく。
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pageSections = document.querySelectorAll('.page-section');
+        const setActiveNav = (id) => {
+            navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === id));
+        };
+        const LINE_OFFSET = 120; // ナビバー(約56px)より少し下を基準線にする
+
+        let sectionTops = [];
+        function measureSections() {
+            sectionTops = Array.from(pageSections).map(s => ({
+                id: s.id,
+                top: s.getBoundingClientRect().top + window.scrollY
+            }));
+        }
+
+        function updateActiveNav() {
+            if (sectionTops.length === 0) return;
+            const line = window.scrollY + LINE_OFFSET;
+            const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+            if (atBottom) {
+                setActiveNav(pageSections[pageSections.length - 1].id);
+                return;
+            }
+            let current = sectionTops[0];
+            for (const s of sectionTops) {
+                if (s.top <= line) current = s;
+            }
+            setActiveNav(current.id);
+        }
+
+        function onLayoutChanged() {
+            measureSections();
+            updateActiveNav();
+        }
+
+        let tickScheduled = false;
+        function onScrollOrResize() {
+            if (tickScheduled) return;
+            tickScheduled = true;
+            requestAnimationFrame(() => {
+                tickScheduled = false;
+                updateActiveNav();
+            });
+        }
+        window.addEventListener('scroll', onScrollOrResize, { passive: true });
+        window.addEventListener('resize', onLayoutChanged);
+
         function rawUrl(repo, file) {
             return `https://github.com/Zavier0305/${repo}/blob/main/${file}?raw=true`;
         }
 
-        function buildCard(item, i, resolveImage) {
+        function buildCard(item, i, resolveImage, kind) {
             const slot = document.createElement('a');
             slot.href = item.url;
             slot.target = '_blank';
@@ -531,6 +584,11 @@
                 card.style.transform = 'rotateX(0) rotateY(0) scale(1)';
             });
 
+            // Worksカードが実際にクリックされているかを計測(ページビューだけでは分からないため)
+            slot.addEventListener('click', () => {
+                window.va('event', { name: 'card_click', kind, title: item.title });
+            });
+
             return slot;
         }
 
@@ -564,7 +622,7 @@
         const initialApps = projects.slice(0, INITIAL_APPS_COUNT);
         const restApps = projects.slice(INITIAL_APPS_COUNT);
 
-        initialApps.forEach((p, i) => appsContainer.appendChild(buildCard(p, i, resolveProjectImage)));
+        initialApps.forEach((p, i) => appsContainer.appendChild(buildCard(p, i, resolveProjectImage, 'project')));
 
         function updateMoreBtn() {
             if (restApps.length === 0) {
@@ -578,12 +636,13 @@
 
         appsMoreBtn.addEventListener('click', () => {
             const startIndex = appsContainer.children.length;
-            restApps.splice(0).forEach((p, i) => appsContainer.appendChild(buildCard(p, startIndex + i, resolveProjectImage)));
+            restApps.splice(0).forEach((p, i) => appsContainer.appendChild(buildCard(p, startIndex + i, resolveProjectImage, 'project')));
             updateMoreBtn();
+            onLayoutChanged();
         });
 
         const articlesContainer = document.getElementById('articles-container');
-        articles.forEach((a, i) => articlesContainer.appendChild(buildCard(a, i, resolveArticleImage)));
+        articles.forEach((a, i) => articlesContainer.appendChild(buildCard(a, i, resolveArticleImage, 'article')));
 
         // --- Works sub tabs ---
         const SUBS = ['works-apps', 'works-articles'];
@@ -593,23 +652,11 @@
             if (!SUBS.includes(id)) id = 'works-apps';
             subPanels.forEach(p => p.classList.toggle('active', p.id === id));
             subButtons.forEach(b => b.classList.toggle('active', b.dataset.sub === id));
+            onLayoutChanged();
         }
         subButtons.forEach(b => b.addEventListener('click', () => showSub(b.dataset.sub)));
         showSub('works-apps');
 
-        // --- scroll-spy nav (vertical scroll page, sticky top bar) ---
-        const navLinks = document.querySelectorAll('.nav-link');
-        const pageSections = document.querySelectorAll('.page-section');
-        const setActiveNav = (id) => {
-            navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === id));
-        };
-        const spy = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) setActiveNav(entry.target.id);
-            });
-        }, { rootMargin: '0px 0px -75% 0px', threshold: 0 });
-        pageSections.forEach(s => spy.observe(s));
-        setActiveNav('home');
     </script>
 </body>
 </html>
