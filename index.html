@@ -373,6 +373,9 @@
 
             <div id="works-apps" class="subtab-panel">
                 <div id="apps-container" class="grid grid-cols-2 gap-4 sm:gap-5"></div>
+                <div class="mt-5 flex justify-center">
+                    <button id="apps-more-btn" class="ghost-btn px-5 py-2 rounded-xl text-xs font-bold"></button>
+                </div>
             </div>
 
             <div id="works-articles" class="subtab-panel">
@@ -576,8 +579,30 @@
             });
         }
 
+        const INITIAL_APPS_COUNT = 4;
+
         const appsContainer = document.getElementById('apps-container');
-        projects.forEach((p, i) => appsContainer.appendChild(buildCard(p, i, resolveProjectImage)));
+        const appsMoreBtn = document.getElementById('apps-more-btn');
+        const initialApps = projects.slice(0, INITIAL_APPS_COUNT);
+        const restApps = projects.slice(INITIAL_APPS_COUNT);
+
+        initialApps.forEach((p, i) => appsContainer.appendChild(buildCard(p, i, resolveProjectImage)));
+
+        function updateMoreBtn() {
+            if (restApps.length === 0) {
+                appsMoreBtn.style.display = 'none';
+                return;
+            }
+            appsMoreBtn.style.display = '';
+            appsMoreBtn.innerHTML = `<i class="fas fa-chevron-down mr-1"></i> もっと見る (+${restApps.length})`;
+        }
+        updateMoreBtn();
+
+        appsMoreBtn.addEventListener('click', () => {
+            const startIndex = appsContainer.children.length;
+            restApps.splice(0).forEach((p, i) => appsContainer.appendChild(buildCard(p, startIndex + i, resolveProjectImage)));
+            updateMoreBtn();
+        });
 
         const articlesContainer = document.getElementById('articles-container');
         articles.forEach((a, i) => articlesContainer.appendChild(buildCard(a, i, resolveArticleImage)));
