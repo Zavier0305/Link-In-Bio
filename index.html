@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#faf5ec">
     <title>Zavier | Links & Decks</title>
+    <!-- Vercel Web Analytics: 実際の訪問者数・流入元を計測するため -->
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -602,7 +607,7 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) setActiveNav(entry.target.id);
             });
-        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+        }, { rootMargin: '0px 0px -75% 0px', threshold: 0 });
         pageSections.forEach(s => spy.observe(s));
         setActiveNav('home');
     </script>
