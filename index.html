@@ -89,6 +89,10 @@
             transition: color 0.2s ease, border-color 0.2s ease;
             text-decoration: none;
             display: inline-block;
+            white-space: nowrap;
+        }
+        @media (max-width: 380px) {
+            .nav-link { font-size: 11px; letter-spacing: 0.04em; }
         }
         .nav-link:hover { color: var(--maroon); }
         .nav-link.active { color: var(--maroon); border-bottom-color: var(--gold); }
@@ -136,6 +140,20 @@
             object-fit: cover;
             display: block;
         }
+        /* プロフィール画像が読み込めなかった場合、alt文字がリングの上に不格好に乗るのを防ぐ */
+        .profile-avatar-ring.no-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold-soft), var(--maroon));
+        }
+        .profile-avatar-ring.no-image .profile-avatar { display: none; }
+        .profile-avatar-fallback-icon {
+            display: none;
+            font-size: 40px;
+            color: var(--surface);
+        }
+        .profile-avatar-ring.no-image .profile-avatar-fallback-icon { display: block; }
 
         .btn-primary {
             background: linear-gradient(180deg, var(--maroon) 0%, var(--maroon-dark) 100%);
@@ -335,7 +353,7 @@
 <body class="min-h-screen flex flex-col items-center pb-16">
     <!-- Nav -->
     <nav class="nav-bar w-full">
-        <div class="max-w-3xl mx-auto px-6 flex justify-center gap-8">
+        <div class="max-w-3xl mx-auto px-3 sm:px-6 flex justify-center gap-3 sm:gap-8">
             <a href="#home" class="nav-link" data-section="home">HOME</a>
             <a href="#about" class="nav-link" data-section="about">ABOUT ME</a>
             <a href="#works" class="nav-link" data-section="works">WORKS</a>
@@ -348,8 +366,9 @@
         <!-- HOME -->
         <section id="home" class="page-section">
             <div class="mb-4 flex flex-col items-center text-center pt-6">
-                <div class="profile-avatar-ring mb-5">
-                    <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar">
+                <div class="profile-avatar-ring mb-5" id="avatar-ring">
+                    <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar" onerror="document.getElementById('avatar-ring').classList.add('no-image')">
+                    <i class="fas fa-user profile-avatar-fallback-icon"></i>
                 </div>
                 <h1 class="text-4xl font-heading font-black tracking-tight gradient-text mb-1">Zavier</h1>
                 <p class="text-[var(--ink-soft)] text-sm font-medium mb-3">中学生バイブコーダー / Fullstack Explorer</p>
@@ -403,14 +422,14 @@
             </div>
 
             <div id="works-apps" class="subtab-panel" role="tabpanel" aria-labelledby="tab-works-apps">
-                <div id="apps-container" class="grid grid-cols-2 gap-4 sm:gap-5"></div>
+                <div id="apps-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5"></div>
                 <div class="mt-5 flex justify-center">
                     <button id="apps-more-btn" class="ghost-btn px-5 py-2 rounded-xl text-xs font-bold"></button>
                 </div>
             </div>
 
             <div id="works-articles" class="subtab-panel" role="tabpanel" aria-labelledby="tab-works-articles">
-                <div id="articles-container" class="grid grid-cols-2 gap-4 sm:gap-5"></div>
+                <div id="articles-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5"></div>
             </div>
         </section>
 
