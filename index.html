@@ -265,6 +265,20 @@
             border-bottom: 2px solid var(--gold-soft);
             position: relative;
         }
+        /* screenshot.png/icon.pngが両方とも読み込めなかった場合の、外部サービスに頼らないフォールバック表示 */
+        .preview-fallback-icon {
+            display: none;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: rgba(122, 0, 0, 0.35);
+            background: linear-gradient(135deg, #f3e7c8, #e7d4a3);
+        }
+        .project-preview.no-image .preview-fallback-icon { display: flex; }
         .project-image {
             width: 100%;
             height: 100%;
@@ -521,7 +535,9 @@
         window.addEventListener('resize', onLayoutChanged);
 
         function rawUrl(repo, file) {
-            return `https://github.com/Zavier0305/${repo}/blob/main/${file}?raw=true`;
+            // github.com/.../blob/...?raw=true だと実際の画像に届くまでリダイレクトが2回発生するため、
+            // raw.githubusercontent.comを直接指定してリクエストを1回で済ませる
+            return `https://raw.githubusercontent.com/Zavier0305/${repo}/main/${file}`;
         }
 
         function buildCard(item, i, resolveImage, kind) {
@@ -537,6 +553,7 @@
                 <div class="link-card">
                     <div class="project-preview">
                         <img alt="${item.title}" class="project-image">
+                        <i class="fas fa-image preview-fallback-icon"></i>
                     </div>
                     <div class="card-body p-4">
                         <div>
@@ -593,6 +610,13 @@
         }
 
         // アプリカード: screenshot.png -> icon.png -> プレースホルダーの順でフォールバック
+        // 外部サービス(via.placeholder.com等)は落ちている可能性があるため、
+        // 最終フォールバックは常にローカルCSSで表示できるアイコンにする(ネットワーク不要)
+        function showLocalFallback(img) {
+            img.style.display = 'none';
+            img.parentElement.classList.add('no-image');
+        }
+
         function resolveProjectImage(img, p) {
             img.src = rawUrl(p.repo, 'screenshot.png');
             img.addEventListener('error', function handleError() {
@@ -601,7 +625,7 @@
                     this.src = rawUrl(p.repo, 'icon.png');
                 } else {
                     this.removeEventListener('error', handleError);
-                    this.src = `https://via.placeholder.com/300x188?text=${encodeURIComponent(p.title)}`;
+                    showLocalFallback(this);
                 }
             });
         }
@@ -611,7 +635,7 @@
             img.src = a.img;
             img.addEventListener('error', function handleError() {
                 this.removeEventListener('error', handleError);
-                this.src = `https://via.placeholder.com/300x188?text=${encodeURIComponent(a.title)}`;
+                showLocalFallback(this);
             });
         }
 
