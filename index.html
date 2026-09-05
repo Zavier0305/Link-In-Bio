@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#faf5ec">
     <title>Zavier | Links & Decks</title>
+    <meta name="description" content="中学生バイブコーダーZavierのポートフォリオ。自作アプリ・ゲームと技術記事をまとめたリンク集。">
+    <!-- リンクインバイオはSNSのプロフィールから共有されることが前提のサイトなのに、
+         OGP/Twitter Cardが一切なく、シェア時にタイトルと素っ気ないURLしか出ない状態だったため追加 -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://link-in-bio-six-mu.vercel.app/">
+    <meta property="og:title" content="Zavier | Links & Decks">
+    <meta property="og:description" content="中学生バイブコーダーZavierのポートフォリオ。自作アプリ・ゲームと技術記事をまとめたリンク集。">
+    <meta property="og:image" content="https://github.com/Zavier0305.png">
+    <meta name="twitter:card" content="summary">
+    <link rel="icon" href="https://github.com/Zavier0305.png">
+    <!-- Vercel Web Analytics: 実際の訪問者数・流入元を計測するため -->
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +31,7 @@
             --surface: #fffdf9;
             --ink: #2b2420;
             --ink-soft: #7a6f61;
-            --ink-faint: #a89d8c;
+            --ink-faint: #7c6c56;
             --maroon: #7a0000;
             --maroon-dark: #560000;
             --gold: #a97a1f;
@@ -26,6 +41,12 @@
 
         html { scroll-behavior: smooth; }
         * { box-sizing: border-box; }
+
+        /* キーボード操作時にテーマに合ったフォーカスリングを表示する(デフォルトのアウトラインのままだと浮いて見えるため) */
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--maroon);
+            outline-offset: 2px;
+        }
 
         button {
             background: none;
@@ -90,6 +111,7 @@
             background: linear-gradient(90deg, transparent, var(--gold-soft), transparent);
         }
         .section-label {
+            margin: 0;
             font-family: 'Shippori Mincho', serif;
             font-weight: 700;
             font-size: 12px;
@@ -260,6 +282,20 @@
             border-bottom: 2px solid var(--gold-soft);
             position: relative;
         }
+        /* screenshot.png/icon.pngが両方とも読み込めなかった場合の、外部サービスに頼らないフォールバック表示 */
+        .preview-fallback-icon {
+            display: none;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: rgba(122, 0, 0, 0.35);
+            background: linear-gradient(135deg, #f3e7c8, #e7d4a3);
+        }
+        .project-preview.no-image .preview-fallback-icon { display: flex; }
         .project-image {
             width: 100%;
             height: 100%;
@@ -331,7 +367,7 @@
 
         <!-- ABOUT ME -->
         <section id="about" class="page-section">
-            <div class="section-divider"><span class="section-label">About Me</span></div>
+            <div class="section-divider"><h2 class="section-label">About Me</h2></div>
             <div class="mb-10">
                 <p class="text-sm leading-loose text-[var(--ink-soft)]">
                     中学2年生。独学でJavaScript / Pythonを学びながら、Gemini・Claudeなどの生成AIを"相棒"にアプリを作る
@@ -360,39 +396,39 @@
 
         <!-- WORKS -->
         <section id="works" class="page-section">
-            <div class="section-divider"><span class="section-label">Works</span></div>
-            <div class="flex justify-center gap-2 mb-6">
-                <button class="subtab-btn" data-sub="works-apps">アプリ</button>
-                <button class="subtab-btn" data-sub="works-articles">記事</button>
+            <div class="section-divider"><h2 class="section-label">Works</h2></div>
+            <div class="flex justify-center gap-2 mb-6" role="tablist" aria-label="Works表示切替">
+                <button class="subtab-btn" data-sub="works-apps" role="tab" id="tab-works-apps" aria-controls="works-apps">アプリ</button>
+                <button class="subtab-btn" data-sub="works-articles" role="tab" id="tab-works-articles" aria-controls="works-articles">記事</button>
             </div>
 
-            <div id="works-apps" class="subtab-panel">
+            <div id="works-apps" class="subtab-panel" role="tabpanel" aria-labelledby="tab-works-apps">
                 <div id="apps-container" class="grid grid-cols-2 gap-4 sm:gap-5"></div>
                 <div class="mt-5 flex justify-center">
                     <button id="apps-more-btn" class="ghost-btn px-5 py-2 rounded-xl text-xs font-bold"></button>
                 </div>
             </div>
 
-            <div id="works-articles" class="subtab-panel">
+            <div id="works-articles" class="subtab-panel" role="tabpanel" aria-labelledby="tab-works-articles">
                 <div id="articles-container" class="grid grid-cols-2 gap-4 sm:gap-5"></div>
             </div>
         </section>
 
         <!-- LINK -->
         <section id="link" class="page-section">
-            <div class="section-divider"><span class="section-label">Link</span></div>
+            <div class="section-divider"><h2 class="section-label">Link</h2></div>
             <div class="flex flex-wrap justify-center gap-3">
-                <a href="https://github.com/Zavier0305" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <a href="https://github.com/Zavier0305" target="_blank" rel="noopener noreferrer" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
                     <i class="fab fa-github"></i> GitHub
                 </a>
-                <a href="https://x.com/KantZav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <a href="https://x.com/KantZav" target="_blank" rel="noopener noreferrer" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
                     <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path></svg>
                     Twitter
                 </a>
-                <a href="https://zenn.dev/zavier" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <a href="https://zenn.dev/zavier" target="_blank" rel="noopener noreferrer" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
                     <i class="fas fa-pen-nib"></i> Zenn
                 </a>
-                <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
+                <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" rel="noopener noreferrer" class="platform-pill flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold">
                     <i class="fab fa-youtube"></i> Studio
                 </a>
             </div>
@@ -462,14 +498,70 @@
             }
         ];
 
-        function rawUrl(repo, file) {
-            return `https://github.com/Zavier0305/${repo}/blob/main/${file}?raw=true`;
+        // --- scroll-spy nav (vertical scroll page, sticky top bar) ---
+        // section高さがまちまち(HOMEやLINKのように短いブロックもある)なため、
+        // IntersectionObserverのrootMargin(%指定)では閾値が破綻するケースがあった。
+        // 代わりに「上からの絶対位置」を直接比較する方式にして、ビューポートの高さに依存しないようにする。
+        // カード追加やタブ切替でページの高さが変わるたびonLayoutChanged()を呼び直す必要があるため、
+        // カード生成より前に関数を定義しておく。
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pageSections = document.querySelectorAll('.page-section');
+        const setActiveNav = (id) => {
+            navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === id));
+        };
+        const LINE_OFFSET = 120; // ナビバー(約56px)より少し下を基準線にする
+
+        let sectionTops = [];
+        function measureSections() {
+            sectionTops = Array.from(pageSections).map(s => ({
+                id: s.id,
+                top: s.getBoundingClientRect().top + window.scrollY
+            }));
         }
 
-        function buildCard(item, i, resolveImage) {
+        function updateActiveNav() {
+            if (sectionTops.length === 0) return;
+            const line = window.scrollY + LINE_OFFSET;
+            const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+            if (atBottom) {
+                setActiveNav(pageSections[pageSections.length - 1].id);
+                return;
+            }
+            let current = sectionTops[0];
+            for (const s of sectionTops) {
+                if (s.top <= line) current = s;
+            }
+            setActiveNav(current.id);
+        }
+
+        function onLayoutChanged() {
+            measureSections();
+            updateActiveNav();
+        }
+
+        let tickScheduled = false;
+        function onScrollOrResize() {
+            if (tickScheduled) return;
+            tickScheduled = true;
+            requestAnimationFrame(() => {
+                tickScheduled = false;
+                updateActiveNav();
+            });
+        }
+        window.addEventListener('scroll', onScrollOrResize, { passive: true });
+        window.addEventListener('resize', onLayoutChanged);
+
+        function rawUrl(repo, file) {
+            // github.com/.../blob/...?raw=true だと実際の画像に届くまでリダイレクトが2回発生するため、
+            // raw.githubusercontent.comを直接指定してリクエストを1回で済ませる
+            return `https://raw.githubusercontent.com/Zavier0305/${repo}/main/${file}`;
+        }
+
+        function buildCard(item, i, resolveImage, kind) {
             const slot = document.createElement('a');
             slot.href = item.url;
             slot.target = '_blank';
+            slot.rel = 'noopener noreferrer';
             slot.className = 'card-slot';
             slot.style.setProperty('--i', i);
 
@@ -479,6 +571,7 @@
                 <div class="link-card">
                     <div class="project-preview">
                         <img alt="${item.title}" class="project-image">
+                        <i class="fas fa-image preview-fallback-icon"></i>
                     </div>
                     <div class="card-body p-4">
                         <div>
@@ -526,10 +619,22 @@
                 card.style.transform = 'rotateX(0) rotateY(0) scale(1)';
             });
 
+            // Worksカードが実際にクリックされているかを計測(ページビューだけでは分からないため)
+            slot.addEventListener('click', () => {
+                window.va('event', { name: 'card_click', kind, title: item.title });
+            });
+
             return slot;
         }
 
         // アプリカード: screenshot.png -> icon.png -> プレースホルダーの順でフォールバック
+        // 外部サービス(via.placeholder.com等)は落ちている可能性があるため、
+        // 最終フォールバックは常にローカルCSSで表示できるアイコンにする(ネットワーク不要)
+        function showLocalFallback(img) {
+            img.style.display = 'none';
+            img.parentElement.classList.add('no-image');
+        }
+
         function resolveProjectImage(img, p) {
             img.src = rawUrl(p.repo, 'screenshot.png');
             img.addEventListener('error', function handleError() {
@@ -538,7 +643,7 @@
                     this.src = rawUrl(p.repo, 'icon.png');
                 } else {
                     this.removeEventListener('error', handleError);
-                    this.src = `https://via.placeholder.com/300x188?text=${encodeURIComponent(p.title)}`;
+                    showLocalFallback(this);
                 }
             });
         }
@@ -548,7 +653,7 @@
             img.src = a.img;
             img.addEventListener('error', function handleError() {
                 this.removeEventListener('error', handleError);
-                this.src = `https://via.placeholder.com/300x188?text=${encodeURIComponent(a.title)}`;
+                showLocalFallback(this);
             });
         }
 
@@ -559,7 +664,7 @@
         const initialApps = projects.slice(0, INITIAL_APPS_COUNT);
         const restApps = projects.slice(INITIAL_APPS_COUNT);
 
-        initialApps.forEach((p, i) => appsContainer.appendChild(buildCard(p, i, resolveProjectImage)));
+        initialApps.forEach((p, i) => appsContainer.appendChild(buildCard(p, i, resolveProjectImage, 'project')));
 
         function updateMoreBtn() {
             if (restApps.length === 0) {
@@ -573,12 +678,13 @@
 
         appsMoreBtn.addEventListener('click', () => {
             const startIndex = appsContainer.children.length;
-            restApps.splice(0).forEach((p, i) => appsContainer.appendChild(buildCard(p, startIndex + i, resolveProjectImage)));
+            restApps.splice(0).forEach((p, i) => appsContainer.appendChild(buildCard(p, startIndex + i, resolveProjectImage, 'project')));
             updateMoreBtn();
+            onLayoutChanged();
         });
 
         const articlesContainer = document.getElementById('articles-container');
-        articles.forEach((a, i) => articlesContainer.appendChild(buildCard(a, i, resolveArticleImage)));
+        articles.forEach((a, i) => articlesContainer.appendChild(buildCard(a, i, resolveArticleImage, 'article')));
 
         // --- Works sub tabs ---
         const SUBS = ['works-apps', 'works-articles'];
@@ -587,24 +693,27 @@
         function showSub(id) {
             if (!SUBS.includes(id)) id = 'works-apps';
             subPanels.forEach(p => p.classList.toggle('active', p.id === id));
-            subButtons.forEach(b => b.classList.toggle('active', b.dataset.sub === id));
+            subButtons.forEach(b => {
+                const selected = b.dataset.sub === id;
+                b.classList.toggle('active', selected);
+                b.setAttribute('aria-selected', String(selected));
+                b.tabIndex = selected ? 0 : -1;
+            });
+            onLayoutChanged();
         }
-        subButtons.forEach(b => b.addEventListener('click', () => showSub(b.dataset.sub)));
+        subButtons.forEach((b, i) => {
+            b.addEventListener('click', () => showSub(b.dataset.sub));
+            // WAI-ARIAのタブパターンに合わせて左右矢印キーでも切替できるようにする
+            b.addEventListener('keydown', (e) => {
+                if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+                e.preventDefault();
+                const next = subButtons[(i + (e.key === 'ArrowRight' ? 1 : subButtons.length - 1)) % subButtons.length];
+                showSub(next.dataset.sub);
+                next.focus();
+            });
+        });
         showSub('works-apps');
 
-        // --- scroll-spy nav (vertical scroll page, sticky top bar) ---
-        const navLinks = document.querySelectorAll('.nav-link');
-        const pageSections = document.querySelectorAll('.page-section');
-        const setActiveNav = (id) => {
-            navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === id));
-        };
-        const spy = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) setActiveNav(entry.target.id);
-            });
-        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
-        pageSections.forEach(s => spy.observe(s));
-        setActiveNav('home');
     </script>
 </body>
 </html>
