@@ -129,8 +129,8 @@
             height: 100px;
             border-radius: 50%;
             padding: 4px;
-            background: linear-gradient(135deg, var(--gold-soft), var(--maroon));
-            box-shadow: 0 10px 24px rgba(90, 30, 10, 0.25);
+            background: var(--gold);
+            box-shadow: 0 10px 24px rgba(90, 30, 10, 0.25), inset 0 0 0 2px var(--maroon-dark);
         }
         .profile-avatar {
             width: 100%;
@@ -145,7 +145,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--gold-soft), var(--maroon));
+            background: var(--gold);
         }
         .profile-avatar-ring.no-image .profile-avatar { display: none; }
         .profile-avatar-fallback-icon {
@@ -155,24 +155,47 @@
         }
         .profile-avatar-ring.no-image .profile-avatar-fallback-icon { display: block; }
 
-        /* --- 名刺(ビジネスカード)風カード: HOMEセクションの顔がわりに --- */
+        /* --- 名刺(ビジネスカード)風カード: HOMEセクションの顔がわりに ---
+           box-shadowだけの「なんちゃって立体」ではなく、perspective + preserve-3d で
+           要素ごとに奥行き(translateZ)を持たせた本物の3D空間として組む。
+           マウス移動でカード自体を傾けると、奥行きの違う要素同士が視差でズレて見える。 */
         .meishi-wrap {
             display: flex;
             flex-direction: column;
             align-items: center;
             padding-top: 1.5rem;
+            perspective: 1200px;
         }
         .meishi-card {
             position: relative;
             width: 100%;
             max-width: 420px;
+            transform-style: preserve-3d;
+            transform: rotateX(14deg) rotateY(-18deg);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            will-change: transform;
+        }
+        /* カードの「厚み」を実際に持たせるための背面プレート。
+           前面(.meishi-card-face)よりZ方向に奥へ置くことで、傾けたときに
+           側面(紙の厚み)がのぞいて見える(=box-shadowだけの「なんちゃって立体」にしない)。 */
+        .meishi-card-edge {
+            position: absolute;
+            inset: 0;
+            background: var(--gold);
+            transform: translateZ(-10px);
+            pointer-events: none;
+        }
+        .meishi-card-face {
+            position: relative;
             background: var(--surface);
             border: 1px solid var(--border);
-            box-shadow: 0 18px 40px rgba(90, 50, 10, 0.18), 0 2px 0 rgba(255,255,255,0.7) inset;
+            box-shadow: 0 20px 34px rgba(60, 40, 15, 0.22);
             padding: 26px 22px 20px;
+            transform: translateZ(4px);
+            transform-style: preserve-3d;
         }
         /* 実際の名刺にある縁取りの二重線を再現 */
-        .meishi-card::before {
+        .meishi-card-face::before {
             content: '';
             position: absolute;
             inset: 8px;
@@ -186,6 +209,7 @@
             border: 2px solid var(--gold);
             opacity: 0.55;
             pointer-events: none;
+            transform: translateZ(6px);
         }
         .meishi-corner-tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
         .meishi-corner-br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
@@ -203,8 +227,13 @@
             height: 68px;
             margin-bottom: 0;
             flex-shrink: 0;
+            transform: translateZ(34px);
         }
-        .meishi-info { flex: 1; min-width: 0; }
+        .meishi-info {
+            flex: 1;
+            min-width: 0;
+            transform: translateZ(16px);
+        }
         .meishi-role {
             font-size: 11px;
             font-weight: 700;
@@ -217,6 +246,7 @@
             font-weight: 900;
             line-height: 1.15;
             margin-bottom: 4px;
+            color: var(--maroon);
         }
         .meishi-location { font-size: 11px; color: var(--ink-faint); }
 
@@ -237,8 +267,8 @@
             font-family: 'Shippori Mincho', serif;
             font-weight: 800;
             font-size: 14px;
-            transform: rotate(-8deg);
-            opacity: 0.7;
+            transform: translateZ(42px) rotate(-8deg);
+            opacity: 0.75;
         }
 
         .meishi-divider {
@@ -247,6 +277,7 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--gold-soft), transparent);
             margin: 18px 0 14px;
+            transform: translateZ(6px);
         }
 
         .meishi-contacts {
@@ -255,6 +286,7 @@
             display: flex;
             justify-content: center;
             gap: 10px;
+            transform: translateZ(22px);
         }
         .meishi-contact {
             width: 32px;
@@ -277,15 +309,6 @@
             .meishi-seal { top: 10px; right: 10px; }
         }
 
-        .btn-primary {
-            background: linear-gradient(180deg, var(--maroon) 0%, var(--maroon-dark) 100%);
-            color: #fff5e8;
-            box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 8px 18px rgba(122, 0, 0, 0.35);
-            border: 1px solid var(--maroon-dark);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 0 rgba(0,0,0,0.2), 0 12px 22px rgba(122, 0, 0, 0.4); }
-
         .platform-pill, .ghost-btn {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -297,13 +320,6 @@
             border-color: var(--maroon);
             color: var(--maroon);
             transform: translateY(-2px);
-        }
-
-        .gradient-text {
-            background: linear-gradient(90deg, var(--maroon) 10%, var(--gold) 90%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
         }
 
         .skill-tag {
@@ -489,35 +505,30 @@
         <section id="home" class="page-section">
             <div class="meishi-wrap pt-6">
                 <div class="meishi-card">
-                    <span class="meishi-corner meishi-corner-tl" aria-hidden="true"></span>
-                    <span class="meishi-corner meishi-corner-br" aria-hidden="true"></span>
-                    <span class="meishi-seal" aria-hidden="true">Z</span>
-                    <div class="meishi-main">
-                        <div class="profile-avatar-ring meishi-avatar" id="avatar-ring">
-                            <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar" onerror="document.getElementById('avatar-ring').classList.add('no-image')">
-                            <i class="fas fa-user profile-avatar-fallback-icon"></i>
+                    <div class="meishi-card-edge" aria-hidden="true"></div>
+                    <div class="meishi-card-face">
+                        <span class="meishi-corner meishi-corner-tl" aria-hidden="true"></span>
+                        <span class="meishi-corner meishi-corner-br" aria-hidden="true"></span>
+                        <span class="meishi-seal" aria-hidden="true">Z</span>
+                        <div class="meishi-main">
+                            <div class="profile-avatar-ring meishi-avatar" id="avatar-ring">
+                                <img src="https://github.com/Zavier0305.png" alt="Zavier" class="profile-avatar" onerror="document.getElementById('avatar-ring').classList.add('no-image')">
+                                <i class="fas fa-user profile-avatar-fallback-icon"></i>
+                            </div>
+                            <div class="meishi-info">
+                                <p class="meishi-role">中学生バイブコーダー / Fullstack Explorer</p>
+                                <h1 class="meishi-name font-heading">Zavier</h1>
+                                <p class="meishi-location"><i class="fas fa-map-marker-alt mr-1"></i>Gunma, JP</p>
+                            </div>
                         </div>
-                        <div class="meishi-info">
-                            <p class="meishi-role">中学生バイブコーダー / Fullstack Explorer</p>
-                            <h1 class="meishi-name font-heading gradient-text">Zavier</h1>
-                            <p class="meishi-location"><i class="fas fa-map-marker-alt mr-1"></i>Gunma, JP</p>
+                        <div class="meishi-divider"></div>
+                        <div class="meishi-contacts">
+                            <a href="https://github.com/Zavier0305" target="_blank" rel="noopener noreferrer" class="meishi-contact" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="https://x.com/KantZav" target="_blank" rel="noopener noreferrer" class="meishi-contact" aria-label="Twitter"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5 fill-current"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path></svg></a>
+                            <a href="https://zenn.dev/zavier" target="_blank" rel="noopener noreferrer" class="meishi-contact" aria-label="Zenn"><i class="fas fa-pen-nib"></i></a>
+                            <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" rel="noopener noreferrer" class="meishi-contact" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                         </div>
                     </div>
-                    <div class="meishi-divider"></div>
-                    <div class="meishi-contacts">
-                        <a href="https://github.com/Zavier0305" target="_blank" rel="noopener noreferrer" class="meishi-contact" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                        <a href="https://x.com/KantZav" target="_blank" rel="noopener noreferrer" class="meishi-contact" aria-label="Twitter"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5 fill-current"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298L17.61 20.647z"></path></svg></a>
-                        <a href="https://zenn.dev/zavier" target="_blank" rel="noopener noreferrer" class="meishi-contact" aria-label="Zenn"><i class="fas fa-pen-nib"></i></a>
-                        <a href="https://www.youtube.com/@ザビエル-zav" target="_blank" rel="noopener noreferrer" class="meishi-contact" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div class="flex flex-wrap justify-center gap-3 mt-6">
-                    <a href="#about" class="ghost-btn px-5 py-2 rounded-xl text-xs font-bold">
-                        <i class="fas fa-user mr-1"></i> About Meを見る
-                    </a>
-                    <a href="#works" class="btn-primary px-5 py-2 rounded-xl text-xs font-bold">
-                        <i class="fas fa-layer-group mr-1"></i> Worksを見る
-                    </a>
                 </div>
             </div>
         </section>
@@ -598,6 +609,33 @@
     </div>
 
     <script>
+        // --- 名刺カードの3D傾き ---
+        // box-shadowだけの「なんちゃって立体」にしないため、静止状態から既に傾いた
+        // 姿勢(BASE_RX/BASE_RY)を基準にし、マウス位置に応じてさらに傾ける。
+        // カード内の要素はCSS側でtranslateZにより奥行きを持たせてあるので、
+        // カードを傾けると要素ごとに視差でズレて見える(=見た目上も実際に3D)。
+        const meishiCard = document.querySelector('.meishi-card');
+        if (meishiCard) {
+            const BASE_RX = 14;
+            const BASE_RY = -18;
+            meishiCard.addEventListener('mousemove', (e) => {
+                const rect = meishiCard.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                const rotateX = BASE_RX + (0.5 - y) * 12;
+                const rotateY = BASE_RY + (x - 0.5) * 16;
+                meishiCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                // 傾きに合わせて影の位置もずらし、光源が固定された実物の下に影が伸びるように見せる
+                const shadowX = -rotateY * 1.1;
+                const shadowY = 16 + Math.abs(rotateX - BASE_RX) * 1.4;
+                meishiCard.style.boxShadow = `${shadowX}px ${shadowY}px 34px rgba(60, 40, 15, 0.24)`;
+            });
+            meishiCard.addEventListener('mouseleave', () => {
+                meishiCard.style.transform = `rotateX(${BASE_RX}deg) rotateY(${BASE_RY}deg)`;
+                meishiCard.style.boxShadow = '';
+            });
+        }
+
         const projects = [
             {
                 title: "わけあって、将棋",
